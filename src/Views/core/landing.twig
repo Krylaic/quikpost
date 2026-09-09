@@ -1,0 +1,14 @@
+{% extends '/layouts/base.twig' %}
+
+{% block content %}
+<div class="hero-unit">
+  <h1>Welcome to {{ site_name }}!</h1>
+  <p>{{ about }}</p>
+  <p>
+    <a href="/register" class="btn btn-primary btn-large">Sign Up &raquo;</a><br>
+    <a style="margin-top:10px" href="/explore" class="btn">Explore &raquo;</a>
+  </p>
+</div>
+
+<hr>
+{% endblock %}

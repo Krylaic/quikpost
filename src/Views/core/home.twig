@@ -1,0 +1,46 @@
+{% extends '/layouts/base.twig' %}
+
+{% block content %}
+<style>
+  @media (min-width: 980px) {
+    body {
+      padding-top: 41px !important;
+    }
+  }
+
+  .alert {
+    margin-top: 20px;
+  }
+
+  .username-link {
+    opacity: 0.5;
+    text-decoration: none !important;
+    transition: opacity 0.15s ease-in-out;
+    cursor: pointer;
+    color: white !important;
+  }
+  
+  .username-link:hover {
+    opacity: 1;
+    text-decoration: none !important;
+  }
+</style>
+
+<div style="min-height: 170px; background-image: linear-gradient(45deg, #006aff 0%, #0099ff 100%);">
+  <div style="background: transparent url('/assets/img/grid-18px.png') top center; margin: 0; height: 80px; padding: 45px 45px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px;">
+    <img src="{{ current_user.avatar }}" height="77" width="77" style="border-radius: 6px; padding-top: 1.5px;">
+    
+    <div style="color: white; margin-left: 0;">
+      <h1 style="margin-top: 0; text-shadow: 0 1px 2px rgba(0,0,0,.5); min-width: 230px;">
+        Hi, {{ current_user.display_name ?? current_user.username }}!
+      </h1>
+      <h3 style="margin: 0; padding: 0; line-height: 22px; text-shadow: 0 1px 2px rgba(0,0,0,.5); font-size: 20px; font-weight: 300;">
+        <a href="/user/{{ current_user.username }}" class="username-link">@{{ current_user.username }}</a> • member since {{ current_user.join_date|date("F j, Y") }}
+      </h3>
+    </div>
+
+  </div>
+</div>
+
+<hr>
+{% endblock %}

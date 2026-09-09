@@ -1,0 +1,51 @@
+<div class="navbar  navbar-fixed-top">
+    <div class="navbar-inner">
+<div class="container" style="max-width: 880px; width: 100%;">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+<a class="brand" href="/" style="margin-left: 0; background: linear-gradient(to bottom, #0099ff 0%,#006aff 100%);text-shadow:none;text-decoration:none !important;color:white;">{{ site_name }}</a>            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="{{ active_page == 'feed' ? 'active' : '' }}">
+                        <a href="/">Feed</a>
+                    </li>
+                    <li class="{{ active_page == 'explore' ? 'active' : '' }}">
+                        <a href="/explore">Explore</a>
+                    </li>
+
+                </ul>
+                {% if current_user %}
+                    <form class="navbar-search pull-left" action="/search" method="GET">
+                        <input type="text" class="search-query" placeholder="Search">
+                    </form>
+                    <ul class="nav pull-right">
+                        <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.username }} <b class="caret"></b><div style="position: relative; width: 20.5px; height: 20.5px;border: #ccc 1px solid; border-radius: 3px;float:left;margin-right:5px;">
+                                <img src="{{ current_user.avatar }}" width="20.5" height="20.5" style=" display: block;">
+                                <img src="/assets/img/gloss.png" width="20.5" height="20.5" style="position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none;">
+                            </div></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/user/{{ current_user.username }}">Profile</a></li>
+                            <li><a href="/profile">Account Settings</a></li>
+                            {% if current_user.admin_level > 0 %}
+                            <li><a href="/admin">Admin Panel</a></li>
+                            {% endif %}
+                            <li class="divider"></li>
+                            <li><a href="/logout">Log Out</a></li>
+                            </ul>
+                        </li>
+                        </ul>
+                {% else %}
+                <form class="navbar-form pull-right" method="POST" action="/login">
+                    <input name="username" class="input-small" type="text" placeholder="Username">
+                    <input name="password" class="input-small" type="password" placeholder="Password">
+                    <button type="submit" class="btn">Sign in</button>
+                </form>
+                {% endif %}
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
