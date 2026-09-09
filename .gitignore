@@ -1,7 +1,6 @@
 composer.phar
 /vendor/
 .env
-LICENSE
 
 /public/dynamic/avatars/*
 /public/dynamic/banners/*
