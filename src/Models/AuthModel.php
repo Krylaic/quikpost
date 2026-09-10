@@ -22,14 +22,18 @@ class AuthModel extends BaseModel {
         if (empty($_SESSION['captcha'])) {
             return false;
         }
-        $builder = new Builder($_SESSION['captcha']);
+
+        $captcha = $_SESSION['captcha'];
+        unset($_SESSION['captcha']);
+        $builder = new Builder($captcha);
         return $builder->compare($form_input);
     }
 
     public function usernameExists($username) {
         // check if the username has been taken on the site
         $stmt = $this->db->prepare('SELECT 1 FROM users WHERE username = ? LIMIT 1');
-        $stmt->execute([$username]);
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
         
         $result = $stmt->get_result();
         return $result->num_rows > 0;
@@ -38,16 +42,18 @@ class AuthModel extends BaseModel {
     public function emailExists($email) {
         // check if the email has already been used before on the site
         $stmt = $this->db->prepare('SELECT 1 FROM users WHERE email = ? LIMIT 1');
-        $stmt->execute([$email]);
+        $stmt->bind_param('s', $email);
+        $stmt->execute();
 
         $result = $stmt->get_result();
         return $result->num_rows > 0;
     }
 
-    public function authenticatePassword($username, $password) {
+    public function loginUser($username, $password) {
         // get the hashed password from the database
         $stmt = $this->db->prepare('SELECT * FROM users WHERE username = ? LIMIT 1');
-        $stmt->execute([$username]);
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
 
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
@@ -66,7 +72,8 @@ class AuthModel extends BaseModel {
     public function registerUser($username, $email, $password) {
         // limit registration based on ip address
         $stmt = $this->db->prepare('SELECT * FROM ip_addresses WHERE address = ? LIMIT 1');
-        $stmt->execute([$_SERVER['REMOTE_ADDR']]);
+        $stmt->bind_param('s', $_SERVER['REMOTE_ADDR']);
+        $stmt->execute();
 
         $result = $stmt->get_result();
 
@@ -77,7 +84,7 @@ class AuthModel extends BaseModel {
         // insert the new user into the database
         $join_date = date('Y-m-d H:i:s');
 
-        $verify_token = substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(20/strlen($x)) )),1,20);
+        $verify_token = bin2hex(random_bytes(32));
 
         $stmt = $this->db->prepare('INSERT INTO users (username, email, password, join_date, verify_token) VALUES (?, ?, ?, ?, ?)');
         $stmt->bind_param('sssss', $username, $email, $password, $join_date, $verify_token);
@@ -89,6 +96,28 @@ class AuthModel extends BaseModel {
         $_SESSION['user_id'] = $this->db->insert_id;
 
         return ['success' => true, 'token' => $verify_token];
+    }
+
+    public function verifyUser($verify_token) {
+        // check if a user has a matching verification token
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE verify_token = ?');
+        $stmt->bind_param('s', $verify_token);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result && $result->num_rows > 0) {
+            // update the user to be verified
+            $row = $result->fetch_assoc();
+            $stmt = $this->db->prepare('UPDATE users SET verified = 1 WHERE id = ?');
+            $stmt->bind_param('i', $row['id']);
+            if($stmt->execute()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
 }

@@ -28,7 +28,7 @@ class AuthController {
     public function returnCaptcha() {
         $authModel = new AuthModel();
 
-        echo $authModel->genCaptcha();
+        echo $authModel->genCaptcha(); 
     }
 
     public function register() {
@@ -150,13 +150,23 @@ class AuthController {
         }
 
         // verify the password
-        if($authModel->authenticatePassword($username, $password)) {
+        if($authModel->loginUser($username, $password)) {
             $_SESSION['notification'] = ['success', 'Login successful!'];
             header('Location: /');
             exit;
         } else {
             $_SESSION['notification'] = ['error', 'Incorrect password!'];
             header('Location: /login');
+            exit;
+        }
+    }
+
+    public function verify($verify_token) {
+        $authModel = new AuthModel();
+
+        if($authModel->verifyUser($verify_token)) {
+            $_SESSION['notification'] = ['success', 'You have successfully verified your account!'];
+            header('Location: /');
             exit;
         }
     }

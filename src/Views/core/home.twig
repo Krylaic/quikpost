@@ -1,6 +1,7 @@
 {% extends '/layouts/base.twig' %}
 
 {% block content %}
+
 <style>
   @media (min-width: 980px) {
     body {
@@ -19,28 +20,279 @@
     cursor: pointer;
     color: white !important;
   }
-  
+
   .username-link:hover {
     opacity: 1;
     text-decoration: none !important;
   }
+
+  .profile-header {
+    min-height: 170px;
+    background-image: linear-gradient(45deg, #006aff 0%, #0099ff 100%);
+  }
+
+  .profile-header-inner {
+    background: transparent url('/assets/img/grid-18px.png') top center;
+    margin: 0;
+    height: 80px;
+    padding: 45px 45px;
+    display: block;
+    overflow: hidden;
+  }
+
+  .profile-header-inner > img {
+    float: left;
+  }
+
+  .profile-header-inner > div {
+    margin-left: 87px !important;
+  }
+
+  .post-box {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .post-box form {
+    margin: 0;
+  }
+
+  .post-box form > div:first-child {
+    position: relative;
+    min-height: 50px;
+    overflow: hidden;
+  }
+
+  .post-box form > div:first-child > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 48px;
+    height: 48px;
+  }
+
+  .post-box form > div:first-child > textarea {
+    position: absolute;
+    top: 0;
+    left: 53px;
+    right: 0;
+    display: block;
+    width: auto;
+    min-height: 50px;
+    box-sizing: border-box;
+    margin: 0 !important;
+    float: none !important;
+    resize: vertical;
+  }
+
+  .post-box-actions {
+    text-align: right;
+    margin-top: 8px;
+    clear: both;
+  }
+
+  .dashboard-row {
+    width: 820px;
+    max-width: 100%;
+    min-height: 600px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .dashboard-main {
+    float: left;
+    width: 590px;
+    min-height: 600px;
+    margin-left: 0 !important;
+    box-sizing: border-box;
+
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+
+  .dashboard-sidebar {
+    float: right;
+    width: 230px;
+    min-height: 600px;
+    box-sizing: border-box;
+
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+
+    overflow: hidden;
+  }
+
+  .dashboard-sidebar h6 {
+    line-height: 11.9px;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 3px;
+  }
+
+  @media (max-width: 979px) {
+    .dashboard-row {
+      width: 100%;
+      min-height: 0;
+      margin: 0;
+    }
+
+    .dashboard-main {
+      float: none;
+      width: 100%;
+      min-height: 0;
+      margin-left: 0 !important;
+    }
+
+    .dashboard-sidebar {
+      float: none;
+      width: 100%;
+      min-height: 200px;
+
+      border-left: 1px solid #eee;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .profile-header-inner {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .dashboard-sidebar {
+      min-height: 150px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .greeting-prefix,
+    .greeting-suffix {
+      display: none;
+    }
+  }
+
+  .posts {
+    padding: 15px;
+  }
 </style>
 
-<div style="min-height: 170px; background-image: linear-gradient(45deg, #006aff 0%, #0099ff 100%);">
-  <div style="background: transparent url('/assets/img/grid-18px.png') top center; margin: 0; height: 80px; padding: 45px 45px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px;">
-    <img src="{{ current_user.avatar }}" height="77" width="77" style="border-radius: 6px; padding-top: 1.5px;">
-    
-    <div style="color: white; margin-left: 0;">
-      <h1 style="margin-top: 0; text-shadow: 0 1px 2px rgba(0,0,0,.5); min-width: 230px;">
-        Hi, {{ current_user.display_name ?? current_user.username }}!
+<div class="profile-header">
+  <div class="profile-header-inner">
+    <img class="hidden-phone hidden-tablet" src="{{ current_user.avatar }}" height="77" width="77" style="box-shadow:0 1px 2px rgba(0,0,0,0.25);border-radius:6px;padding-top:1.5px;">
+    <div style="color:white;margin-left:0;">
+      <h1 style="margin-top:0;text-shadow:0 1px 2px rgba(0,0,0,.5);min-width:230px;font-size:54px;">
+          <span class="greeting-prefix">Hi, </span>{{ current_user.display_name ?? current_user.username }}<span class="greeting-suffix">!</span>
       </h1>
-      <h3 style="margin: 0; padding: 0; line-height: 22px; text-shadow: 0 1px 2px rgba(0,0,0,.5); font-size: 20px; font-weight: 300;">
+      <h3 style="margin:0;padding:0;line-height:22px;text-shadow:0 1px 2px rgba(0,0,0,.5);font-size:20px;font-weight:300;">
         <a href="/user/{{ current_user.username }}" class="username-link">@{{ current_user.username }}</a> • member since {{ current_user.join_date|date("F j, Y") }}
       </h3>
     </div>
-
   </div>
 </div>
 
-<hr>
+<div class="dashboard-row clearfix">
+  <div class="dashboard-main">
+    <div class="post-box">
+      <form>
+        <div>
+          <img src="{{ current_user.avatar }}" width="48" height="48" class="pull-left" style="border:1px solid #cccccc;border-radius:4px;">
+          <textarea class="pull-left" placeholder="Write something cool..."></textarea>
+        </div>
+        <div class="post-box-actions">
+          <a class="btn btn-primary">
+            Post
+          </a>
+        </div>
+      </form>
+    </div>
+    <div class="posts">
+    
+    </div>
+  </div>
+
+  <div class="dashboard-sidebar">
+    {% if news %}
+    <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div class="mb-2">
+            <div style="font-size: 1.0rem; font-weight: 600;">{{ news.title }}</div>
+            <div style="font-size: 0.7rem; color: #6c757d;">by <strong>{{ news.author }}</strong> on {{ news.post_date|date("M j, Y") }}</div>
+        </div>
+        <p class="text-body" style="margin:0;">{{ news.content|length > 140 ? news.content|slice(0, 140) ~ '...' : news.content }}</p>
+        <span style="text-align:right;"><a href="/news">Read more news...</a></span>
+    </div>
+    {% endif %}
+
+    <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div style="font-size: 1.0rem; font-weight: 600;">New Users</div>
+
+        <div class="user-grid">
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
+                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+        </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.user-grid {
+    overflow: hidden;
+    margin-right: -6px;
+}
+
+.user-avatar {
+    display: block;
+    float: left;
+    width: 35px;
+    height: 35px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+
+.user-avatar img {
+    display: block;
+}
+
+.user-avatar:hover img {
+    border-color: #999;
+}
+</style>
+
+<script>
+    $(function () {
+        $('.user-avatar').tooltip();
+    });
+</script>
+  
+<br>
 {% endblock %}

@@ -8,22 +8,31 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// external dependencies
 use Bramus\Router\Router;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use Dotenv\Dotenv;
+
+// the site
 use App\Models\UserModel;
+use App\Controllers\PageController;
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
-
-$optionsModel = new \App\Models\OptionsModel();
 
 $loader = new FilesystemLoader(__DIR__ . '/../src/Views');
 $twig = new Environment($loader, [
     "cache" => false,
     "debug" => true
 ]);
+
+// load models
+$optionsModel = new \App\Models\OptionsModel();
+
+// load controllers
+$pageController = new \App\Controllers\PageController($twig);
+$authController = new \App\Controllers\AuthController($twig);
 
 $twig->addGlobal('site_name', $optionsModel->getSiteName());
 $twig->addGlobal('slogan', $optionsModel->getSlogan());
@@ -48,43 +57,42 @@ if (!empty($_SESSION['user_id'])) {
 $router = new Router();
 
 // routes
-$router->get('/', function() use ($twig) {
-    $controller = new \App\Controllers\PageController($twig);
-    $controller->index();
+$router->get('/', function() use ($pageController) {
+    $pageController->index();
 });
 
-$router->get('/register', function() use ($twig) {
-    $controller = new \App\Controllers\AuthController($twig);
-    $controller->registerForm();
+$router->get('/register', function() use ($authController) {
+    $authController->registerForm();
 });
 
-$router->post('/register', function() use ($twig) {
-    $controller = new \App\Controllers\AuthController($twig);
-    $controller->register();
+$router->post('/register', function() use ($authController) {
+    $authController->register();
 });
 
-$router->get('/login', function() use ($twig) {
-    $controller = new \App\Controllers\AuthController($twig);
-    $controller->loginForm();
+$router->get('/login', function() use ($authController) {
+    $authController->loginForm();
 });
 
-$router->post('/login', function() use ($twig) {
-    $controller = new \App\Controllers\AuthController($twig);
-    $controller->login();
+$router->post('/login', function() use ($authController) {
+    $authController->login();
 });
 
-$router->get('/captcha', function() use ($twig) {
+$router->get('/captcha', function() use ($authController) {
     header('Content-Type: image/png');
-    $controller = new \App\Controllers\AuthController($twig);
-    $controller->returnCaptcha();
+    $authController->returnCaptcha();
 });
 
-$router->get('/logout', function() use ($twig) {
+$router->get('/logout', function() use ($authController) {
     session_unset();
     session_destroy();
+    session_start();
     $_SESSION['notification'] = ['success', 'You have successfully logged out'];
     header('Location: /');
     die();
+});
+
+$router->get('/verify/{verify_token}', function($verify_token) use ($twig) {
+    $authController->verify($verify_token);
 });
 
 $router->set404(function() use ($twig) {
