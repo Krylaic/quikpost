@@ -131,30 +131,39 @@
     margin-bottom: 3px;
   }
 
-  @media (max-width: 979px) {
-    .dashboard-row {
-      width: 100%;
-      min-height: 0;
-      margin: 0;
-    }
-
-    .dashboard-main {
-      float: none;
-      width: 100%;
-      min-height: 0;
-      margin-left: 0 !important;
-    }
-
-    .dashboard-sidebar {
-      float: none;
-      width: 100%;
-      min-height: 200px;
-
-      border-left: 1px solid #eee;
-      border-right: 1px solid #eee;
-      border-bottom: 1px solid #eee;
-    }
+@media (max-width: 979px) {
+  .profile-header-inner {
+    padding-left: 20px;
+    padding-right: 20px;
   }
+
+  .profile-header-inner > div {
+    margin-left: 0 !important;
+  }
+
+  .dashboard-row {
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+  }
+
+  .dashboard-main {
+    float: none;
+    width: 100%;
+    min-height: 0;
+    margin-left: 0 !important;
+  }
+
+  .dashboard-sidebar {
+    float: none;
+    width: 100%;
+    min-height: 200px;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+}
+
 
   @media (max-width: 767px) {
     .profile-header-inner {
@@ -174,9 +183,6 @@
     }
   }
 
-  .posts {
-    padding: 15px;
-  }
 </style>
 
 <div class="profile-header">
@@ -208,9 +214,67 @@
         </div>
       </form>
     </div>
-    <div class="posts">
-    
+<style>
+  .post {
+    min-height: 40px;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .post-content {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .post-avatar-wrap {
+    display: table-cell;
+    width: 40px;
+    vertical-align: top;
+  }
+
+  .post-avatar {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .post-right {
+    display: table-cell;
+    padding-left: 8px;
+    vertical-align: top;
+    font-size: 13px;
+    line-height: 16px;
+    word-wrap: break-word;
+  }
+
+  .post-user {
+    margin: 0;
+    font-weight: bold;
+  }
+
+  .post-text {
+    line-height: 18px;
+  }
+</style>
+
+<div class="posts">
+  <div class="post">
+    <div class="post-content">
+      <div class="post-avatar-wrap">
+        <img src="{{ current_user.avatar }}" width="40" height="40" class="post-avatar">
+      </div>
+
+      <div class="post-right">
+        <div class="post-user">User</div>
+        <p class="post-text">Hello The jews did 9/11</p>
+      </div>
     </div>
+  </div>
+</div>
+
   </div>
 
   <div class="dashboard-sidebar">

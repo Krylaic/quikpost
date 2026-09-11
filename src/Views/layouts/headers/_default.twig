@@ -22,7 +22,7 @@
                     </form>
                     <ul class="nav pull-right">
                         <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.username }} <b class="caret"></b><div style="position: relative; width: 20.5px; height: 20.5px;border: #ccc 1px solid; border-radius: 3px;float:left;margin-right:5px;">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.display_name ?? current_user.username }} <b class="caret"></b><div style="position: relative; width: 20.5px; height: 20.5px;border: #ccc 1px solid; border-radius: 3px;float:left;margin-right:5px;">
                                 <img src="{{ current_user.avatar }}" width="20.5" height="20.5" style=" display: block;">
                                 <img src="/assets/img/gloss.png" width="20.5" height="20.5" style="position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none;">
                             </div></a>
