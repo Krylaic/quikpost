@@ -1,189 +1,7 @@
 {% extends '/layouts/base.twig' %}
 
 {% block content %}
-
-<style>
-  @media (min-width: 980px) {
-    body {
-      padding-top: 41px !important;
-    }
-  }
-
-  .alert {
-    margin-top: 20px;
-  }
-
-  .username-link {
-    opacity: 0.5;
-    text-decoration: none !important;
-    transition: opacity 0.15s ease-in-out;
-    cursor: pointer;
-    color: white !important;
-  }
-
-  .username-link:hover {
-    opacity: 1;
-    text-decoration: none !important;
-  }
-
-  .profile-header {
-    min-height: 170px;
-    background-image: linear-gradient(45deg, #006aff 0%, #0099ff 100%);
-  }
-
-  .profile-header-inner {
-    background: transparent url('/assets/img/grid-18px.png') top center;
-    margin: 0;
-    height: 80px;
-    padding: 45px 45px;
-    display: block;
-    overflow: hidden;
-  }
-
-  .profile-header-inner > img {
-    float: left;
-  }
-
-  .profile-header-inner > div {
-    margin-left: 87px !important;
-  }
-
-  .post-box {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-  }
-
-  .post-box form {
-    margin: 0;
-  }
-
-  .post-box form > div:first-child {
-    position: relative;
-    min-height: 50px;
-    overflow: hidden;
-  }
-
-  .post-box form > div:first-child > img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 48px;
-    height: 48px;
-  }
-
-  .post-box form > div:first-child > textarea {
-    position: absolute;
-    top: 0;
-    left: 53px;
-    right: 0;
-    display: block;
-    width: auto;
-    min-height: 50px;
-    box-sizing: border-box;
-    margin: 0 !important;
-    float: none !important;
-    resize: vertical;
-  }
-
-  .post-box-actions {
-    text-align: right;
-    margin-top: 8px;
-    clear: both;
-  }
-
-  .dashboard-row {
-    width: 820px;
-    max-width: 100%;
-    min-height: 600px;
-    margin: 0 auto;
-    box-sizing: border-box;
-  }
-
-  .dashboard-main {
-    float: left;
-    width: 590px;
-    min-height: 600px;
-    margin-left: 0 !important;
-    box-sizing: border-box;
-
-    border-left: 1px solid #eee;
-    border-right: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-  }
-
-  .dashboard-sidebar {
-    float: right;
-    width: 230px;
-    min-height: 600px;
-    box-sizing: border-box;
-
-    border-right: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-
-    overflow: hidden;
-  }
-
-  .dashboard-sidebar h6 {
-    line-height: 11.9px;
-    padding: 0;
-    margin: 0;
-    margin-bottom: 3px;
-  }
-
-@media (max-width: 979px) {
-  .profile-header-inner {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .profile-header-inner > div {
-    margin-left: 0 !important;
-  }
-
-  .dashboard-row {
-    width: 100%;
-    min-height: 0;
-    margin: 0;
-  }
-
-  .dashboard-main {
-    float: none;
-    width: 100%;
-    min-height: 0;
-    margin-left: 0 !important;
-  }
-
-  .dashboard-sidebar {
-    float: none;
-    width: 100%;
-    min-height: 200px;
-    border-left: 1px solid #eee;
-    border-right: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-  }
-}
-
-
-  @media (max-width: 767px) {
-    .profile-header-inner {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-
-    .dashboard-sidebar {
-      min-height: 150px;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .greeting-prefix,
-    .greeting-suffix {
-      display: none;
-    }
-  }
-
-</style>
+<link href="/assets/css/custom.css" rel="stylesheet">
 
 <div class="profile-header">
   <div class="profile-header-inner">
@@ -214,53 +32,10 @@
         </div>
       </form>
     </div>
-<style>
-  .post {
-    min-height: 40px;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-  }
 
-  .post-content {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
-
-  .post-avatar-wrap {
-    display: table-cell;
-    width: 40px;
-    vertical-align: top;
-  }
-
-  .post-avatar {
-    display: block;
-    width: 40px;
-    height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
-  .post-right {
-    display: table-cell;
-    padding-left: 8px;
-    vertical-align: top;
-    font-size: 13px;
-    line-height: 16px;
-    word-wrap: break-word;
-  }
-
-  .post-user {
-    margin: 0;
-    font-weight: bold;
-  }
-
-  .post-text {
-    line-height: 18px;
-  }
-</style>
 
 <div class="posts">
+  <!--
   <div class="post">
     <div class="post-content">
       <div class="post-avatar-wrap">
@@ -268,11 +43,28 @@
       </div>
 
       <div class="post-right">
-        <div class="post-user">User</div>
+        <div class="post-user">User <span>at Sep 11, 2001</span></div>
         <p class="post-text">Hello The jews did 9/11</p>
+        <div class="post-actions">
+        <div class="like" data-post-id="290"><div class="like-icon"></div><div class="like-text">0</div></div>
       </div>
+      </div>
+      
     </div>
+
   </div>
+  -->
+
+
+  <div id="error" style="position: relative; width: 100%; min-height: 150px; margin-top: 20px; padding: 0 0 12px; text-align: center; font-size: 0;">
+    <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+    <div style="position: relative; display: inline-block; vertical-align: middle; text-align: left; max-width: 320px; width: 100%; font-size: 13px;">
+        <h1 style="font-size: 20px; font-weight: 500; margin-top: 0; margin-bottom: 0;">Uh oh!</h1>
+        <p style="position: relative; margin-top: 0; font-size: 13px; cursor: default; color: gray; font-weight: 400;">
+            You aren't following anybody yet! Visit the <a href="/explore">explore</a> tab to check out people you might want to follow!
+        </p>
+    </div>
+</div>
 </div>
 
   </div>

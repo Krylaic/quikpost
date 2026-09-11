@@ -29,4 +29,15 @@ class PageController {
             ]);
         }
     }
+
+    public function explore() {
+        $optionsModel = new OptionsModel();
+        $newsModel = new NewsModel();
+        
+        echo $this->twig->render('core/explore.twig', [
+            'active_page' => "explore",
+            'about' => $optionsModel->getAbout(),
+            'news' => $newsModel->getLatestNews()
+        ]);
+    }
 }

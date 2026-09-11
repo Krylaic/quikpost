@@ -61,6 +61,10 @@ $router->get('/', function() use ($pageController) {
     $pageController->index();
 });
 
+$router->get('/explore', function() use ($pageController) {
+    $pageController->explore();
+});
+
 $router->get('/register', function() use ($authController) {
     $authController->registerForm();
 });
