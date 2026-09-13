@@ -56,4 +56,44 @@ class UserModel extends BaseModel {
         return $stmt->execute();
     }
 
+    public function followUser($target, $follower) {
+        // this is copy pasted directly from quikpost pre-rewrite lmao
+
+        if ($target === $follower) {
+            return(["error" => "You cannot follow yourself."]);
+        }
+
+        $stmt = $conn->prepare('SELECT * FROM followers WHERE following = ? AND follower = ? LIMIT 1');
+        $stmt->bind_param('ss', $target, $follower);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        if ($result->num_rows == 0) {
+            $stmt = $conn->prepare('INSERT INTO followers (following, follower) VALUES (?, ?)');
+            $stmt->bind_param('ss', $target, $follower);
+            $stmt->execute();
+            $stmt->close();
+
+            $stmt = $conn->prepare('UPDATE users SET followers = followers + 1 WHERE username = ?');
+            $stmt->bind_param('s', $target);
+            $stmt->execute();
+            $stmt->close();
+
+            return(["status" => "following"]);
+        } else {
+            $stmt = $conn->prepare('DELETE FROM followers WHERE following = ? AND follower = ?');
+            $stmt->bind_param('ss', $target, $follower);
+            $stmt->execute();
+            $stmt->close();
+
+            $stmt = $conn->prepare('UPDATE users SET followers = GREATEST(followers - 1, 0) WHERE username = ?');
+            $stmt->bind_param('s', $target);
+            $stmt->execute();
+            $stmt->close();
+
+            return(["status" => "follow"]);
+        }
+    }
+
 }

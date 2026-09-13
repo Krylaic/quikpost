@@ -21,7 +21,7 @@
       <form method="POST" action="/post">
         <div>
           <img src="{{ current_user.avatar }}" width="48" height="48" class="pull-left" style="border:1px solid #cccccc;border-radius:4px;">
-          <textarea name="content" class="pull-left" placeholder="Write something cool..."></textarea>
+          <textarea name="content" class="pull-left" placeholder="Write something cool..." maxlength="255"></textarea>
         </div>
         <div class="post-box-actions">
           <input type="submit" class="btn btn-primary" value="Post">

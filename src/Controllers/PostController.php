@@ -31,6 +31,12 @@ class PostController {
             exit;
         }
 
+        if(strlen($content) > 255) {
+            $_SESSION['notification'] = ['error', 'Your post must be less than 255 characters!'];
+            header('Location: /');
+            exit;
+        }
+
         // send the data into the post model
         $posted = $postModel->createPost($content, $author);
 

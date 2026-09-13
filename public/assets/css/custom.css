@@ -47,7 +47,6 @@
 
   .post-box {
     padding: 15px;
-    border-bottom: 1px solid #eee;
   }
 
   .post-box form {
@@ -70,18 +69,15 @@
   }
 
   .post-box form > div:first-child > textarea {
-    position: absolute;
-    top: 0;
-    left: 53px;
-    right: 0;
     display: block;
-    width: auto;
+    width: calc(100% - 53px);
     min-height: 50px;
     box-sizing: border-box;
-    margin: 0 !important;
+    margin: 0 0 0 53px !important;
     float: none !important;
     resize: vertical;
   }
+
 
   .post-box-actions {
     text-align: right;
@@ -95,6 +91,7 @@
     min-height: 600px;
     margin: 0 auto;
     box-sizing: border-box;
+    border-bottom: 1px solid #eee;
   }
 
   .dashboard-main {
@@ -106,7 +103,7 @@
 
     border-left: 1px solid #eee;
     border-right: 1px solid #eee;
-    border-bottom: 1px solid #eee;
+    
   }
 
   .dashboard-sidebar {
@@ -116,7 +113,6 @@
     box-sizing: border-box;
 
     border-right: 1px solid #eee;
-    border-bottom: 1px solid #eee;
 
     overflow: hidden;
   }
@@ -183,7 +179,7 @@
     .post {
     min-height: 40px;
     padding: 15px;
-    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
   }
 
   .post-content {
