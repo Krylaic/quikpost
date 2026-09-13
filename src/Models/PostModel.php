@@ -36,7 +36,7 @@ class PostModel extends BaseModel {
         $stmt->bind_param('ss', $author, $post_date);
         $stmt->execute();
         $result = $stmt->get_result();
-        if ($result->num_rows >= 3) {
+        if ($result->num_rows >= 3) { 
             return ['success' => false, 'error' => 'Please wait a bit before posting again!'];
         }
 
