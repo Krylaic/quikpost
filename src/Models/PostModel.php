@@ -28,4 +28,26 @@ class PostModel extends BaseModel {
 
     // functions to update data
 
+    public function createPost($content, $author) {
+        $post_date = date('Y-m-d H:i:s');
+
+        // rate limiting
+        $stmt = $this->db->prepare("SELECT * FROM posts WHERE author = ? AND post_date >= (? - INTERVAL 1 MINUTE)");
+        $stmt->bind_param('ss', $author, $post_date);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows >= 3) {
+            return ['success' => false, 'error' => 'Please wait a bit before posting again!'];
+        }
+
+        // make the post
+        $stmt = $this->db->prepare("INSERT INTO posts (content, author, post_date) VALUES (?, ?, ?)");
+        $stmt->bind_param('sss', $content, $author, $post_date);
+        
+        if($stmt->execute()) {
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'error' => 'There was a problem making your post'];
+        }
+    }
 }

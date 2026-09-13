@@ -18,15 +18,13 @@
 {% block dashboardmain %}
 {% if current_user %}
     <div class="post-box">
-      <form>
+      <form method="POST" action="/post">
         <div>
           <img src="{{ current_user.avatar }}" width="48" height="48" class="pull-left" style="border:1px solid #cccccc;border-radius:4px;">
-          <textarea class="pull-left" placeholder="Write something cool..."></textarea>
+          <textarea name="content" class="pull-left" placeholder="Write something cool..."></textarea>
         </div>
         <div class="post-box-actions">
-          <a class="btn btn-primary">
-            Post
-          </a>
+          <input type="submit" class="btn btn-primary" value="Post">
         </div>
       </form>
     </div>

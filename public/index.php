@@ -18,6 +18,7 @@ use Dotenv\Dotenv;
 // the site
 use App\Models\UserModel;
 use App\Controllers\PageController;
+use App\Controllers\PostController;
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
@@ -34,6 +35,7 @@ $optionsModel = new \App\Models\OptionsModel();
 // load controllers
 $pageController = new \App\Controllers\PageController($twig);
 $authController = new \App\Controllers\AuthController($twig);
+$postController = new \App\Controllers\PostController($twig);
 
 // load services
 $helperService = new \App\Services\HelperService($twig);
@@ -84,6 +86,10 @@ $router->get('/login', function() use ($authController) {
 
 $router->post('/login', function() use ($authController) {
     $authController->login();
+});
+
+$router->post('/post', function() use ($postController) {
+    $postController->createPost();
 });
 
 $router->get('/captcha', function() use ($authController) {
