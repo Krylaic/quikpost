@@ -12,6 +12,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Bramus\Router\Router;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use Twig\TwigFilter;
 use Dotenv\Dotenv;
 
 // the site
@@ -34,9 +35,13 @@ $optionsModel = new \App\Models\OptionsModel();
 $pageController = new \App\Controllers\PageController($twig);
 $authController = new \App\Controllers\AuthController($twig);
 
+// load services
+$helperService = new \App\Services\HelperService($twig);
+
 $twig->addGlobal('site_name', $optionsModel->getSiteName());
 $twig->addGlobal('slogan', $optionsModel->getSlogan());
 $twig->addGlobal('domain', $optionsModel->getDomain());
+$twig->addFilter(new TwigFilter('timeAgo', [$helperService, 'timeAgo']));
 
 // set notification 
 if (!empty($_SESSION['notification'])) {
@@ -95,7 +100,7 @@ $router->get('/logout', function() use ($authController) {
     die();
 });
 
-$router->get('/verify/{verify_token}', function($verify_token) use ($twig) {
+$router->get('/verify/{verify_token}', function($verify_token) use ($authController) {
     $authController->verify($verify_token);
 });
 

@@ -4,6 +4,7 @@ namespace App\Controllers;
 use Twig\Environment;
 use App\Models\OptionsModel;
 use App\Models\NewsModel;
+use App\Models\PostModel;
 
 class PageController {
     private $twig;
@@ -17,7 +18,7 @@ class PageController {
         $newsModel = new NewsModel();
         
         if(!empty($_SESSION['user_id'])) {
-            echo $this->twig->render('core/home.twig', [
+            echo $this->twig->render('core/feeds/home.twig', [
                 'active_page' => "feed",
                 'about' => $optionsModel->getAbout(),
                 'news' => $newsModel->getLatestNews()
@@ -33,11 +34,13 @@ class PageController {
     public function explore() {
         $optionsModel = new OptionsModel();
         $newsModel = new NewsModel();
+        $postModel = new PostModel();
         
-        echo $this->twig->render('core/explore.twig', [
+        echo $this->twig->render('core/feeds/explore.twig', [
             'active_page' => "explore",
             'about' => $optionsModel->getAbout(),
-            'news' => $newsModel->getLatestNews()
+            'news' => $newsModel->getLatestNews(),
+            'posts' => $postModel->getAllPosts(15, 0)
         ]);
     }
 }
