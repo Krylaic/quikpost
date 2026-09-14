@@ -45,4 +45,17 @@ class PageController {
             'posts' => $postModel->getAllPosts(15, 0)
         ]);
     }
+
+    public function profile() {
+        $optionsModel = new OptionsModel();
+        $newsModel = new NewsModel();
+        $postModel = new PostModel();
+        
+        echo $this->twig->render('core/feeds/explore.twig', [
+            'active_page' => "explore",
+            'about' => $optionsModel->getAbout(),
+            'news' => $newsModel->getLatestNews(),
+            'posts' => $postModel->getAllPosts(15, 0)
+        ]);
+    }
 }

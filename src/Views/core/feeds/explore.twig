@@ -24,6 +24,24 @@
           <textarea name="content" class="pull-left" placeholder="Write something cool..." maxlength="255"></textarea>
         </div>
         <div class="post-box-actions">
+          <div class="actions">
+            <label for="file-input" style="cursor: pointer;" class="pull-left">
+                <img src="/assets/ico/picture_add.png" alt="Add Picture">
+            </label>
+            <input type="file" id="file-input" style="display: none;" accept="image/*">
+        </div>
+
+        <!-- i got gemini to make this for me pls dont judge i hate javacsirpt-->
+      <script>
+          const fileInput = document.getElementById('file-input');
+
+          fileInput.addEventListener('change', (event) => {
+              const file = event.target.files[0];
+              if (file) {
+                  alert(`File successfully selected, it will be attached in your post`);
+              }
+          });
+      </script>
           <input type="submit" class="btn btn-primary" value="Post">
         </div>
       </form>
@@ -44,6 +62,9 @@
           <div class="post-right">
             <div class="post-user"><a href="/user/{{ post.author_name }}">{{ post.author_display_name ?? post.author_name }}</a> <span>{{ post.post_date|timeAgo }}</span></div>
             <p class="post-text">{{ post.content }}</p>
+          {% if post.attachment %}
+          <img class="post-img" src="{{ post.attachment }}">
+          {% endif %}
             <div class="post-actions">
               <div class="like" data-post-id="{{ post.id }}">
                 <div class="like-icon"></div>

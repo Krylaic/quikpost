@@ -59,7 +59,7 @@ class PostModel extends BaseModel {
 
     // functions to update data
 
-    public function createPost($content, $author) {
+    public function createPost($content, $author, $attachment) {
         $post_date = date('Y-m-d H:i:s');
 
         // rate limiting
@@ -72,8 +72,8 @@ class PostModel extends BaseModel {
         }
 
         // make the post
-        $stmt = $this->db->prepare("INSERT INTO posts (content, author, post_date) VALUES (?, ?, ?)");
-        $stmt->bind_param('sss', $content, $author, $post_date);
+        $stmt = $this->db->prepare("INSERT INTO posts (content, author, post_date, attachment) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param('ssss', $content, $author, $post_date, $attachment);
         
         if($stmt->execute()) {
             return ['success' => true];

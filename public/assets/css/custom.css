@@ -217,7 +217,7 @@
   }
 
   .post-user a {
-    color: black;
+    color: #333333;
   }
 
   .post-text {
@@ -286,4 +286,12 @@
 
 .user-avatar:hover img {
     border-color: #999;
+}
+
+.post-img {
+  margin: 3px 0px;
+  border-radius: 4px;
+  padding: 2px;
+  border: 1px solid #ccc;
+  max-width: 400px;
 }

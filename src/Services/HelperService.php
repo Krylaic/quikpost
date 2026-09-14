@@ -75,4 +75,46 @@ class HelperService extends BaseService {
         }
     }
 
+    // taken from original quikpost
+    // pretty sure i watched a youtube video on how to make this ?? i dont remember it was a long time ago lol
+    function uploadImageFile($inputName, $destinationDir, $maxFileSize = 10000000, $allowedExts = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp'], $onError = null) {
+        if (!is_array($allowedExts)) {
+            $allowedExts = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp'];
+        }
+        
+        if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] !== 4) {
+            $file = $_FILES[$inputName];
+            $fileName = $file['name'];
+            $fileTmpName = $file['tmp_name'];
+            $fileSize = $file['size'];
+            $fileError = $file['error'];
+
+            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+            if (in_array($fileExt, $allowedExts)) {
+                if ($fileError === 0) {
+                    if ($fileSize < $maxFileSize) {
+                        $fileNameNew = uniqid('', true) . "." . $fileExt;
+                        $relativePath = rtrim($destinationDir, '/') . '/' . $fileNameNew;
+                        $fileFullDestination = $_SERVER['DOCUMENT_ROOT'] . $relativePath;
+
+                        if (move_uploaded_file($fileTmpName, $fileFullDestination)) {
+                            return $relativePath;
+                        } else {
+                            if (is_callable($onError)) $onError("Failed to move uploaded file.");
+                        }
+                    } else {
+                        if (is_callable($onError)) $onError("File is too large.");
+                    }
+                } else {
+                    if (is_callable($onError)) $onError("Upload error occurred.");
+                }
+            } else {
+                if (is_callable($onError)) $onError("Invalid file type.");
+            }
+        }
+
+        return null;
+    }
+
 }
