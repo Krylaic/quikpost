@@ -42,7 +42,7 @@
           </div>
 
           <div class="post-right">
-            <div class="post-user">{{ post.author_display_name ?? post.author_name }} <span>{{ post.post_date|timeAgo }}</span></div>
+            <div class="post-user"><a href="/user/{{ post.author_name }}">{{ post.author_display_name ?? post.author_name }}</a> <span>{{ post.post_date|timeAgo }}</span></div>
             <p class="post-text">{{ post.content }}</p>
             <div class="post-actions">
               <div class="like" data-post-id="{{ post.id }}">

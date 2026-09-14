@@ -216,6 +216,10 @@
     font-weight: bold;
   }
 
+  .post-user a {
+    color: black;
+  }
+
   .post-text {
     line-height: 18px;
     margin-bottom: -2px;

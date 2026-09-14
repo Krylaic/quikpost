@@ -16,12 +16,14 @@ class PageController {
     public function index() {
         $optionsModel = new OptionsModel();
         $newsModel = new NewsModel();
+        $postModel = new PostModel();
         
         if(!empty($_SESSION['user_id'])) {
             echo $this->twig->render('core/feeds/home.twig', [
                 'active_page' => "feed",
                 'about' => $optionsModel->getAbout(),
-                'news' => $newsModel->getLatestNews()
+                'news' => $newsModel->getLatestNews(),
+                'posts' => $postModel->getFeedPosts(15, 0, $_SESSION['user_id'])
             ]);
         } else {
             echo $this->twig->render('core/landing.twig', [
