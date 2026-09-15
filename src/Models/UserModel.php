@@ -16,6 +16,14 @@ class UserModel extends BaseModel {
         return $row ?? false;
     }
 
+    public function fetchRecentUsers($limit, $offset) {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE suspended = 0 ORDER BY join_date DESC LIMIT ? OFFSET ?');
+        $stmt->bind_param('ii', $limit, $offset);
+        $stmt->execute();
+        
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function fetchUsername($user_id) {
         $stmt = $this->db->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
         $stmt->bind_param('s', $user_id);

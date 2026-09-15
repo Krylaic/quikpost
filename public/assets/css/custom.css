@@ -255,7 +255,7 @@
     float: left; 
     font-weight: bold; 
     margin-left: 18px; 
-    margin-top: -16px;
+    margin-top: -15px;
 }
 
 .post-user span {
@@ -294,4 +294,8 @@
   padding: 2px;
   border: 1px solid #ccc;
   max-width: 400px;
+}
+
+.post-actions {
+  margin-top:3px;
 }

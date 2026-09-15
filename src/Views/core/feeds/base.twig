@@ -28,42 +28,21 @@
     </div>
     {% endif %}
 
+    {% if users %}
     <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
         <div style="font-size: 1.0rem; font-weight: 600;">New Users</div>
 
+        {% if users is not empty %}
         <div class="user-grid">
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+              {% for user in users %}
+                <a href="/user/{{ user.username }}" class="user-avatar" data-toggle="tooltip" data-placement="top" title="{{ user.display_name ?? user.username }}">
+                  <img src="{{ user.avatar }}" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
                 </a>
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
-                </a>
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
-                </a>
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
-                </a>
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
-                </a>
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
-                </a>
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
-                </a>
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
-                </a>
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
-                </a>
-                <a href="/user/" class="user-avatar" data-toggle="tooltip" data-placement="top" title="username">
-                  <img src="/dynamic/avatars/default.jpg" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
-                </a>
+              {% endfor %}
         </div>
+        {% endif %}
     </div>
+    {% endif %}
   </div>
 </div>
 

@@ -54,6 +54,10 @@
 {% if posts is not empty %}
     {% for post in posts %}
       <div class="post">
+        <div style="margin-left:40px;margin-top:-8px;margin-bottom:2px;">
+            <img class="pull-left" src="/assets/img/arrow_redo.png">
+            <span style="font-family: Georgia, 'Helvetica Neue', Helvetica, Arial, sans-serif;color:#333;margin-left:3px;margin-top:-2px;font-size:13px;">Replying to <i><a href="/status/">"Aliudfkjhglkdsjfghslkjdfgh"</a></i></span>
+        </div>
         <div class="post-content">
           <div class="post-avatar-wrap">
             <img src="{{ post.author_avatar }}" width="40" height="40" class="post-avatar">
