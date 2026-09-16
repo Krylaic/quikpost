@@ -72,6 +72,10 @@ $router->get('/explore', function() use ($pageController) {
     $pageController->explore();
 });
 
+$router->get('/status/{status}', function($status) use ($postController) {
+    $postController->status($status);
+});
+
 $router->get('/register', function() use ($authController) {
     $authController->registerForm();
 });

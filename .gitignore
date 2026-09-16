@@ -4,6 +4,7 @@ composer.phar
 
 /public/dynamic/avatars/*
 /public/dynamic/banners/*
+/public/dynamic/attachments/*
 
 !/public/dynamic/avatars/default.jpg
 !/public/dynamic/banners/default.jpg

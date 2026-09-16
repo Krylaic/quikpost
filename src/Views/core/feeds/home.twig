@@ -54,8 +54,13 @@
 {% if posts is not empty %}
     {% for post in posts %}
       <div class="post">
+        {% if post.reply_to %}
+        <div style="margin-left:40px;margin-top:-8px;margin-bottom:2px;">
+            <img class="pull-left" src="/assets/img/arrow_redo.png">
+            <span style="color:#444;margin-left:3px;margin-top:-2px;font-size:13px;">Replying to <i><a href="/status/{{ post.reply_to }}">"{{ post.reply_to_content }}"</a></i></span>
+        </div>
+        {% endif %}
         <div class="post-content">
-          
           <div class="post-avatar-wrap">
             <img src="{{ post.author_avatar }}" width="40" height="40" class="post-avatar">
           </div>
@@ -67,9 +72,21 @@
           <img class="post-img" src="{{ post.attachment }}">
           {% endif %}
             <div class="post-actions">
-              <div class="like" data-post-id="{{ post.id }}">
-                <div class="like-icon"></div>
-                <div class="like-text">0</div>
+              <div class="pull-left">
+                <a class="like" href="/like/{{ post.id }}">
+                  <div class="like-icon"></div>
+                  <div class="like-text">0</div>
+                </a>
+                <a class="reply" href="/status/{{ post.id }}">
+                  <div class="reply-icon"></div>
+                  <div class="reply-text">{{ post.reply_count }} {% if post.reply_count == 1 %}reply{% else %}replies{% endif %}</div>
+                </a>
+              </div>
+              <div class="pull-right">
+                <a class="report" href="/report/{{post.id }}">
+                  <div class="report-text">Report</div>
+                  <div class="report-icon"></div>
+                </a>
               </div>
             </div>
           </div>

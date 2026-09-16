@@ -3,6 +3,9 @@ namespace App\Controllers;
 
 use Twig\Environment;
 use App\Models\PostModel;
+use App\Models\OptionsModel;
+use App\Models\NewsModel;
+use App\Models\UserModel;
 use App\Services\HelperService;
 
 class PostController {
@@ -18,6 +21,7 @@ class PostController {
 
         $content = trim($_POST['content']);
         $author = $_SESSION['user_id'];
+        $reply_to = $_POST['reply_to'] ?? null;
 
         // make sure the user is authenticated
         if(empty($author)) {
@@ -61,7 +65,7 @@ class PostController {
         }
 
         // send the data into the post model
-        $posted = $postModel->createPost($content, $author, $attachment);
+        $posted = $postModel->createPost($content, $author, $attachment, $reply_to);
 
         if($posted['success']) {
             $_SESSION['notification'] = ['success', 'Successfully posted!'];
@@ -74,5 +78,18 @@ class PostController {
         }
         
     }   
+
+    public function status($id) {
+        $newsModel = new NewsModel();
+        $postModel = new PostModel();
+        $userModel = new UserModel();
+        
+        echo $this->twig->render('core/status.twig', [
+            'news' => $newsModel->getLatestNews(),
+            'post' => $postModel->getPostById($id),
+            'replies' => $postModel->getPostReplies($id),
+            'users' => $userModel->fetchRecentUsers(10, 0)
+        ]);
+    }
 
 }

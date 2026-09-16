@@ -225,7 +225,7 @@
     margin-bottom: -2px;
   }
 
-  .like, .trash {
+  .like, .reply {
     width: 30px; 
     height: 15px; 
     margin-top: 3px; 
@@ -246,6 +246,9 @@
     height: 14px; 
     background-image: url(/assets/img/post-actions.png); 
     float: left;
+    image-rendering: -webkit-optimize-contrast; 
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }
 
 .like-text {
@@ -254,8 +257,7 @@
     color: gray; 
     float: left; 
     font-weight: bold; 
-    margin-left: 18px; 
-    margin-top: -15px;
+    margin-left: 4px; 
 }
 
 .post-user span {
@@ -293,9 +295,126 @@
   border-radius: 4px;
   padding: 2px;
   border: 1px solid #ccc;
-  max-width: 400px;
+  width: auto;
 }
 
 .post-actions {
   margin-top:3px;
+  height: 14px;
+}
+
+
+
+
+
+
+.reply:hover .reply-icon { 
+    background-position: -14px 15px; 
+}
+
+.reply:hover .reply-text { 
+    color: #0E68C2; 
+}
+
+.reply-icon {
+    width: 14px; 
+    height: 14px; 
+    background-image: url(/assets/img/post-actions.png); 
+    float: left;
+    background-position: 0px 15px; 
+    image-rendering: -webkit-optimize-contrast; 
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.reply-text {
+    width: 64px; 
+    height: 14px; 
+    color: gray; 
+    float: left; 
+    font-weight: bold; 
+    margin-left: 4px; 
+}
+
+
+.reply:hover .reply-icon { 
+    background-position: -14px -14px; 
+}
+
+.reply:hover .reply-text { 
+    color: #0E68C2; 
+}
+
+.reply-icon {
+    width: 14px; 
+    height: 14px; 
+    background-image: url(/assets/img/post-actions.png); 
+    float: left;
+    background-position: 0px -14px; 
+    image-rendering: -webkit-optimize-contrast; 
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.reply-text {
+    width: 64px; 
+    height: 14px; 
+    color: gray; 
+    float: left; 
+    font-weight: bold; 
+    margin-left: 4px; 
+}
+
+
+
+
+
+.report:hover .report-icon { 
+    background-position: -14px 15px; 
+}
+
+.report:hover .report-text { 
+    color: darkred; 
+}
+
+.report-icon {
+    width: 14px; 
+    height: 14px; 
+    background-image: url(/assets/img/post-actions.png); 
+    float: left;
+    background-position: 0px 15px; 
+    image-rendering: -webkit-optimize-contrast; 
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.report-text {
+    width: 64px; 
+    height: 14px; 
+    color: gray; 
+    float: left; 
+    font-weight: bold; 
+    margin-right: 4px; 
+    text-align: right;
+}
+
+
+.report:hover .report-icon { 
+    background-position: -14px -27px; 
+}
+
+.report:hover .report-text { 
+    color: darkred; 
+}
+
+.report-icon {
+    width: 14px; 
+    height: 14px; 
+    background-image: url(/assets/img/post-actions.png); 
+    float: left;
+    background-position: 0px -27px; 
+    image-rendering: -webkit-optimize-contrast; 
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    margin-top:1px;
 }

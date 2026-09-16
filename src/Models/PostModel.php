@@ -13,9 +13,12 @@ class PostModel extends BaseModel {
                 posts.*, 
                 users.username AS author_name, 
                 users.avatar AS author_avatar,
-                users.display_name AS author_display_name
+                users.display_name AS author_display_name,
+                reply_posts.content AS reply_to_content,
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
             FROM posts
             INNER JOIN users ON posts.author = users.id
+            LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
             WHERE users.suspended = 0
             ORDER BY posts.post_date DESC
             LIMIT ? OFFSET ?
@@ -34,9 +37,12 @@ class PostModel extends BaseModel {
                 posts.*, 
                 users.username AS author_name, 
                 users.avatar AS author_avatar,
-                users.display_name AS author_display_name
+                users.display_name AS author_display_name,
+                reply_posts.content AS reply_to_content,
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
             FROM posts
             INNER JOIN users ON posts.author = users.id
+            LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
             WHERE users.suspended = 0
             AND (
                 posts.author = ?
@@ -55,11 +61,56 @@ class PostModel extends BaseModel {
 
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
+    
+    public function getPostById($postId) {
+        $stmt = $this->db->prepare('
+            SELECT 
+                posts.*, 
+                users.username AS author_name, 
+                users.avatar AS author_avatar,
+                users.display_name AS author_display_name,
+                reply_posts.content AS reply_to_content,
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
+            FROM posts
+            INNER JOIN users ON posts.author = users.id
+            LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
+            WHERE posts.id = ?
+            AND users.suspended = 0
+        ');
+
+        $stmt->bind_param('i', $postId);
+        $stmt->execute();
+
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function getPostReplies($postId) {
+        $stmt = $this->db->prepare('
+            SELECT 
+                posts.*, 
+                users.username AS author_name, 
+                users.avatar AS author_avatar,
+                users.display_name AS author_display_name,
+                reply_posts.content AS reply_to_content,
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
+            FROM posts
+            INNER JOIN users ON posts.author = users.id
+            LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
+            WHERE posts.reply_to = ?
+            AND users.suspended = 0
+            ORDER BY posts.post_date ASC
+        ');
+
+        $stmt->bind_param('i', $postId);
+        $stmt->execute();
+
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
 
 
     // functions to update data
 
-    public function createPost($content, $author, $attachment) {
+    public function createPost($content, $author, $attachment, $reply_to) {
         $post_date = date('Y-m-d H:i:s');
 
         // rate limiting
@@ -71,9 +122,20 @@ class PostModel extends BaseModel {
             return ['success' => false, 'error' => 'Please wait a bit before posting again!'];
         }
 
+        // make sure the post the user is replying to actually exists
+        if($reply_to !== null) {
+            $stmt = $this->db->prepare("SELECT * FROM posts WHERE id = ?");
+            $stmt->bind_param('s', $reply_to);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows === 0) {  
+                return ['success' => false, 'error' => 'You are attempting to reply to a post that doesn\'t exist!'];
+            }
+        }
+        
         // make the post
-        $stmt = $this->db->prepare("INSERT INTO posts (content, author, post_date, attachment) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param('ssss', $content, $author, $post_date, $attachment);
+        $stmt = $this->db->prepare("INSERT INTO posts (content, author, post_date, attachment, reply_to) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param('sssss', $content, $author, $post_date, $attachment, $reply_to);
         
         if($stmt->execute()) {
             return ['success' => true];
