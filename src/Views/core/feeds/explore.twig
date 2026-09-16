@@ -18,7 +18,7 @@
 {% block dashboardmain %}
 {% if current_user %}
     <div class="post-box">
-      <form method="POST" action="/post">
+      <form method="POST" action="/post" enctype="multipart/form-data">
         <div>
           <img src="{{ current_user.avatar }}" width="48" height="48" class="pull-left" style="border:1px solid #cccccc;border-radius:4px;">
           <textarea name="content" class="pull-left" placeholder="Write something cool..." maxlength="255"></textarea>
