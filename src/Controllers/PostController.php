@@ -79,17 +79,19 @@ class PostController {
         
     }   
 
-    public function status($id) {
+    public function status($id, $page = 1) {
         $newsModel = new NewsModel();
         $postModel = new PostModel();
         $userModel = new UserModel();
-        
+
         echo $this->twig->render('core/status.twig', [
             'news' => $newsModel->getLatestNews(),
             'post' => $postModel->getPostById($id),
-            'replies' => $postModel->getPostReplies($id),
-            'users' => $userModel->fetchRecentUsers(10, 0)
+            'replies' => $postModel->getPostReplies($id, 15, ($page - 1) * 15),
+            'users' => $userModel->fetchRecentUsers(10, 0),
+            'page' => $page
         ]);
     }
+
 
 }

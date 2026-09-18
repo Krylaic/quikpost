@@ -92,6 +92,7 @@
     margin: 0 auto;
     box-sizing: border-box;
     border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
   }
 
   .dashboard-main {
@@ -108,11 +109,11 @@
 
   .dashboard-sidebar {
     float: right;
-    width: 230px;
+    width: 229px;
     min-height: 600px;
     box-sizing: border-box;
 
-    border-right: 1px solid #eee;
+    
 
     overflow: hidden;
   }

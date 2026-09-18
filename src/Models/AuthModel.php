@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use SimpleCaptcha\Builder;
+use App\Models\OptionsModel;
 
 class AuthModel extends BaseModel {
     
@@ -70,16 +71,21 @@ class AuthModel extends BaseModel {
     }
 
     public function registerUser($username, $email, $password) {
+        $optionsModel = new OptionsModel();
+
         // limit registration based on ip address
-        $stmt = $this->db->prepare('SELECT * FROM ip_addresses WHERE address = ? LIMIT 1');
-        $stmt->bind_param('s', $_SERVER['REMOTE_ADDR']);
-        $stmt->execute();
+        if($optionsModel->getIpCheck() == 1) {
+            $stmt = $this->db->prepare('SELECT * FROM ip_addresses WHERE address = ? LIMIT 1');
+            $stmt->bind_param('s', $_SERVER['REMOTE_ADDR']);
+            $stmt->execute();
 
-        $result = $stmt->get_result();
+            $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            return ['success' => false, 'error' => 'An account has already been registered from this IP address!'];
+            if ($result->num_rows > 0) {
+                return ['success' => false, 'error' => 'An account has already been registered from this IP address!'];
+            }
         }
+        
 
         // insert the new user into the database
         $join_date = date('Y-m-d H:i:s');

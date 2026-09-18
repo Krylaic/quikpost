@@ -3,11 +3,13 @@
 
 {% block dashboardmain %}
 
+{% set post_id = post.id %}
+
 
 
 <div class="posts">
 
-      <div class="post" style="border-bottom: 1px solid #eee;">
+      <div class="post" style="border-top:none;">
         {% if post.reply_to %}
         <div style="margin-left:40px;margin-top:-8px;margin-bottom:2px;">
             <img class="pull-left" src="/assets/img/arrow_redo.png">
@@ -48,7 +50,7 @@
       </div>
 
 {% if current_user %}
-    <div class="post-box">
+    <div class="post-box" style="border-top:1px #eee solid;">
       <form method="POST" action="/post" enctype="multipart/form-data">
         
         <div>
@@ -118,6 +120,16 @@
         </div>
       </div>
     {% endfor %}
+    <ul class="pager" style="padding:0px 10px;">
+      {% if page > 1 %}
+      <li class="previous">
+        <a href="/status/{{ post_id}}/{{ page - 1 }}">&larr; Newer</a>
+      </li>
+      {% endif %}
+      <li class="next">
+        <a href="/status/{{ post_id}}/{{ page + 1 }}">Older &rarr; </a>
+      </li>
+    </ul>
 {% else %}
     <div id="error" style="position: relative; width: 100%; min-height: 150px; margin-top: 20px; padding: 0 0 12px; text-align: center; font-size: 0;">
         <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>

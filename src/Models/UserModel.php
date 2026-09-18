@@ -16,6 +16,16 @@ class UserModel extends BaseModel {
         return $row ?? false;
     }
 
+    public function fetchAllUserDataByUsername($username) {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE username = ? LIMIT 1');
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row ?? false;
+    }
+
     public function fetchRecentUsers($limit, $offset) {
         $stmt = $this->db->prepare('SELECT * FROM users WHERE suspended = 0 ORDER BY join_date DESC LIMIT ? OFFSET ?');
         $stmt->bind_param('ii', $limit, $offset);
@@ -52,6 +62,39 @@ class UserModel extends BaseModel {
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         return $row['verified'] ?? false;
+    }
+
+    public function fetchBanStatus($user_id) {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
+        $stmt->bind_param('s', $user_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+
+        if($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return (bool)($row['suspended'] ?? false);
+        } else {
+            return true;
+        }
+        
+
+    }
+
+    public function fetchBanStatusByUsername($username) {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE username = ? LIMIT 1');
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+
+        if($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            return (bool)($row['suspended'] ?? false);
+        } else {
+            return true;
+        }
+        
     }
 
 

@@ -93,6 +93,16 @@
         </div>
       </div>
     {% endfor %}
+    <ul class="pager" style="padding:0px 10px;">
+      {% if page > 1 %}
+      <li class="previous">
+        <a href="/page/{{ page - 1 }}">&larr; Newer</a>
+      </li>
+      {% endif %}
+      <li class="next">
+        <a href="/page/{{ page + 1 }}">Older &rarr; </a>
+      </li>
+    </ul>
 {% else %}
     <div id="error" style="position: relative; width: 100%; min-height: 150px; margin-top: 20px; padding: 0 0 12px; text-align: center; font-size: 0;">
         <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>

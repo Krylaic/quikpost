@@ -14,12 +14,24 @@ class AuthController {
     }
 
     public function registerForm() {
+        if(!empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'You are already logged in!'];
+            header('Location: /');
+            exit;
+        }
+
         $optionsModel = new OptionsModel();
 
         echo $this->twig->render('core/register.twig');
     }
 
     public function loginForm() {
+        if(!empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'You are already logged in!'];
+            header('Location: /');
+            exit;
+        }
+
         $optionsModel = new OptionsModel();
 
         echo $this->twig->render('core/login.twig');
@@ -32,6 +44,12 @@ class AuthController {
     }
 
     public function register() {
+        if(!empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'You are already logged in!'];
+            header('Location: /');
+            exit;
+        }
+
         $optionsModel = new OptionsModel();
         $authModel = new AuthModel();
         $mailService = new MailService($this->twig);
@@ -122,6 +140,12 @@ class AuthController {
     }
 
     public function login() {
+        if(!empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'You are already logged in!'];
+            header('Location: /');
+            exit;
+        }
+
         $authModel = new AuthModel();
 
         $username = $_POST['username'] ?? '';

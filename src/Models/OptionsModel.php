@@ -31,4 +31,11 @@ class OptionsModel extends BaseModel {
         $row = $result->fetch_assoc();
         return $row['about'] ?? '';
     }
+
+    public function getIpCheck() {
+        $result = $this->db->query("SELECT ip_check FROM options LIMIT 1");
+
+        $row = $result->fetch_assoc();
+        return $row['ip_check'] ?? '';
+    }
 }

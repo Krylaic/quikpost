@@ -36,6 +36,7 @@ $optionsModel = new \App\Models\OptionsModel();
 $pageController = new \App\Controllers\PageController($twig);
 $authController = new \App\Controllers\AuthController($twig);
 $postController = new \App\Controllers\PostController($twig);
+$userController = new \App\Controllers\UserController($twig);
 
 // load services
 $helperService = new \App\Services\HelperService($twig);
@@ -54,10 +55,19 @@ if (!empty($_SESSION['notification'])) {
 // user stuff
 if (!empty($_SESSION['user_id'])) {
     $userModel = new UserModel();
-    $userModel->updateIp($_SESSION['user_id'], $_SERVER['REMOTE_ADDR']);
 
-    $current_user = $userModel->fetchAllUserData($_SESSION['user_id']);
-    $twig->addGlobal('current_user', $current_user);
+    if($userModel->fetchBanStatus($_SESSION['user_id']) === false) {
+        $userModel->updateIp($_SESSION['user_id'], $_SERVER['REMOTE_ADDR']);
+
+        $current_user = $userModel->fetchAllUserData($_SESSION['user_id']);
+        $twig->addGlobal('current_user', $current_user);
+    } else {
+        unset($_SESSION['user_id']);
+        $_SESSION['notification'] = ['error', 'Your account has been suspended.'];
+        header('Location: /');
+        exit;
+    }
+    
 }
 
 
@@ -68,13 +78,35 @@ $router->get('/', function() use ($pageController) {
     $pageController->index();
 });
 
+$router->get('/page/{page}', function($page) use ($pageController) {
+    $pageController->index($page);
+});
+
 $router->get('/explore', function() use ($pageController) {
     $pageController->explore();
 });
 
-$router->get('/status/{status}', function($status) use ($postController) {
-    $postController->status($status);
+$router->get('/explore/{page}', function($page) use ($pageController) {
+    $pageController->explore($page);
 });
+
+$router->get('/status/{status}/{page}', function ($status, $page) use ($postController) {
+    $postController->status($status, $page);
+});
+
+$router->get('/status/{status}', function ($status) use ($postController) {
+    $postController->status($status, 1);
+});
+
+
+$router->get('/user/{username}/{page}', function ($username, $page) use ($userController) {
+    $userController->user($username, $page);
+});
+
+$router->get('/user/{username}', function ($username) use ($userController) {
+    $userController->user($username, 1);
+});
+
 
 $router->get('/register', function() use ($authController) {
     $authController->registerForm();

@@ -1,0 +1,152 @@
+{% extends '/layouts/base.twig' %}
+
+{% block content %}
+<link href="/assets/css/custom.css" rel="stylesheet">
+
+<div class="profile-header">
+  <div class="profile-header-inner">
+    <img class="hidden-phone hidden-tablet" src="{{ current_user.avatar }}" height="77" width="77" style="box-shadow:0 1px 2px rgba(0,0,0,0.25);border-radius:6px;padding-top:1.5px;">
+    <div style="color:white;margin-left:0;">
+      <h1 style="margin-top:0;text-shadow:0 1px 2px rgba(0,0,0,.5);min-width:230px;font-size:54px;">
+          <span class="greeting-prefix">Hi, </span>{{ current_user.display_name ?? current_user.username }}<span class="greeting-suffix">!</span>
+      </h1>
+      <h3 style="margin:0;padding:0;line-height:22px;text-shadow:0 1px 2px rgba(0,0,0,.5);font-size:20px;font-weight:300;">
+        <a href="/user/{{ current_user.username }}" class="username-link">@{{ current_user.username }}</a> • member since {{ current_user.join_date|date("F j, Y") }}
+      </h3>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-row clearfix">
+  <div class="dashboard-main">
+    <div class="posts">
+
+{% if posts is not empty %}
+    {% for post in posts %}
+      <div class="post">
+        {% if post.reply_to %}
+        <div style="margin-left:40px;margin-top:-8px;margin-bottom:2px;">
+            <img class="pull-left" src="/assets/img/arrow_redo.png">
+            <span style="color:#444;margin-left:3px;margin-top:-2px;font-size:13px;">Replying to <i><a href="/status/{{ post.reply_to }}">"{{ post.reply_to_content }}"</a></i></span>
+        </div>
+        {% endif %}
+        <div class="post-content">
+          <div class="post-avatar-wrap">
+            <img src="{{ post.author_avatar }}" width="40" height="40" class="post-avatar">
+          </div>
+
+          <div class="post-right">
+            <div class="post-user"><a href="/user/{{ post.author_name }}">{{ post.author_display_name ?? post.author_name }}</a> <span>{{ post.post_date|timeAgo }}</span></div>
+            <p class="post-text">{{ post.content }}</p>
+          {% if post.attachment %}
+          <img class="post-img" src="{{ post.attachment }}">
+          {% endif %}
+            <div class="post-actions">
+              <div class="pull-left">
+                <a class="like" href="/like/{{ post.id }}">
+                  <div class="like-icon"></div>
+                  <div class="like-text">0</div>
+                </a>
+                <a class="reply" href="/status/{{ post.id }}">
+                  <div class="reply-icon"></div>
+                  <div class="reply-text">{{ post.reply_count }} {% if post.reply_count == 1 %}reply{% else %}replies{% endif %}</div>
+                </a>
+              </div>
+              <div class="pull-right">
+                <a class="report" href="/report/{{post.id }}">
+                  <div class="report-text">Report</div>
+                  <div class="report-icon"></div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    <ul class="pager" style="padding:0px 10px;">
+      {% if page > 1 %}
+      <li class="previous">
+        <a href="/explore/{{ page - 1 }}">&larr; Newer</a>
+      </li>
+      {% endif %}
+      <li class="next">
+        <a href="/explore/{{ page + 1 }}">Older &rarr; </a>
+      </li>
+    </ul>
+{% else %}
+    <div id="error" style="position: relative; width: 100%; min-height: 150px; margin-top: 20px; padding: 0 0 12px; text-align: center; font-size: 0;">
+        <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+        <div style="position: relative; display: inline-block; vertical-align: middle; text-align: left; max-width: 320px; width: 100%; font-size: 13px;">
+            <h1 style="font-size: 20px; font-weight: 500; margin-top: 0; margin-bottom: 0;">Uh oh!</h1>
+            <p style="position: relative; margin-top: 0; font-size: 13px; cursor: default; color: gray; font-weight: 400;">
+                There aren't any posts yet! Why not make one?
+            </p>
+        </div>
+    </div>
+{% endif %}
+
+</div>
+  </div>
+
+  <div class="dashboard-sidebar">
+    {% if news %}
+    <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div class="mb-2">
+            <div style="font-size: 1.0rem; font-weight: 600;">{{ news.title }}</div>
+            <div style="font-size: 0.7rem; color: #6c757d;">by <strong>{{ news.author }}</strong> on {{ news.post_date|date("M j, Y") }}</div>
+        </div>
+        <p class="text-body" style="margin:0;">{{ news.content|length > 140 ? news.content|slice(0, 140) ~ '...' : news.content }}</p>
+        <span style="text-align:right;"><a href="/news">Read more news...</a></span>
+    </div>
+    {% endif %}
+
+    {% if users %}
+    <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div style="font-size: 1.0rem; font-weight: 600;">New Users</div>
+
+        {% if users is not empty %}
+        <div class="user-grid">
+              {% for user in users %}
+                <a href="/user/{{ user.username }}" class="user-avatar" data-toggle="tooltip" data-placement="top" title="{{ user.display_name ?? user.username }}">
+                  <img src="{{ user.avatar }}" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+              {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.user-grid {
+    overflow: hidden;
+    margin-right: -6px;
+}
+
+.user-avatar {
+    display: block;
+    float: left;
+    width: 35px;
+    height: 35px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+
+.user-avatar img {
+    display: block;
+}
+
+.user-avatar:hover img {
+    border-color: #999;
+}
+</style>
+
+<script>
+    $(function () {
+        $('.user-avatar').tooltip();
+    });
+</script>
+  
+<br>
+{% endblock %}
