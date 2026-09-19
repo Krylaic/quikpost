@@ -31,7 +31,7 @@ class UserController {
             'posts' => $postModel->getPostsByUserId($user_id, 15, ($page - 1)*15),
             'following' => $userModel->fetchFollowing($user_id, 10, 0),
             'followers' => $userModel->fetchFollowers($user_id, 10, 0),
-            'is_following' => $userModel->isFollowing($user_id, $_SESSION['user_id'] ?? null),
+            'is_following' => $userModel->isFollowing($_SESSION['user_id'] ?? null, $user_id),
             'page' => $page
         ]);
     }

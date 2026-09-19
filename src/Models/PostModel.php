@@ -84,7 +84,7 @@ class PostModel extends BaseModel {
         return $stmt->get_result()->fetch_assoc();
     }
 
-    public function getPostsByUserId($user_id) {
+    public function getPostsByUserId($user_id, $limit = 15, $offset = 0) {
         $stmt = $this->db->prepare('
             SELECT 
                 posts.*, 
@@ -99,9 +99,10 @@ class PostModel extends BaseModel {
             WHERE posts.author = ?
             AND users.suspended = 0
             ORDER BY posts.id DESC
+            LIMIT ? OFFSET ?
         ');
 
-        $stmt->bind_param('i', $user_id);
+        $stmt->bind_param('iii', $user_id, $limit, $offset);
         $stmt->execute();
 
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
