@@ -9,45 +9,7 @@
 
 <div class="posts">
 
-      <div class="post" style="border-top:none;">
-        {% if post.reply_to %}
-        <div style="margin-left:40px;margin-top:-8px;margin-bottom:2px;">
-            <img class="pull-left" src="/assets/img/arrow_redo.png">
-            <span style="color:#444;margin-left:3px;margin-top:-2px;font-size:13px;">Replying to <i><a href="/status/{{ post.reply_to }}">"{{ post.reply_to_content }}"</a></i></span>
-        </div>
-        {% endif %}
-        <div class="post-content">
-          <div class="post-avatar-wrap">
-            <img src="{{ post.author_avatar }}" width="40" height="40" class="post-avatar">
-          </div>
-
-          <div class="post-right">
-            <div class="post-user"><a href="/user/{{ post.author_name }}">{{ post.author_display_name ?? post.author_name }}</a> <span>{{ post.post_date|timeAgo }}</span></div>
-            <p class="post-text">{{ post.content }}</p>
-          {% if post.attachment %}
-          <img class="post-img" src="{{ post.attachment }}">
-          {% endif %}
-            <div class="post-actions">
-              <div class="pull-left">
-                <a class="like" href="/like/{{ post.id }}">
-                  <div class="like-icon"></div>
-                  <div class="like-text">0</div>
-                </a>
-                <a class="reply" href="/status/{{ post.id }}">
-                  <div class="reply-icon"></div>
-                  <div class="reply-text">{{ post.reply_count }} {% if post.reply_count == 1 %}reply{% else %}replies{% endif %}</div>
-                </a>
-              </div>
-              <div class="pull-right">
-                <a class="report" href="/report/{{post.id }}">
-                  <div class="report-text">Report</div>
-                  <div class="report-icon"></div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        {% include '/layouts/posts.twig' with { post: post } %}
 
 {% if current_user %}
     <div class="post-box" style="border-top:1px #eee solid;">
@@ -86,39 +48,7 @@
 
     {% if replies is not empty %}
     {% for post in replies %}
-      <div class="post">
-        <div class="post-content">
-          <div class="post-avatar-wrap">
-            <img src="{{ post.author_avatar }}" width="40" height="40" class="post-avatar">
-          </div>
-
-          <div class="post-right">
-            <div class="post-user"><a href="/user/{{ post.author_name }}">{{ post.author_display_name ?? post.author_name }}</a> <span>{{ post.post_date|timeAgo }}</span></div>
-            <p class="post-text">{{ post.content }}</p>
-          {% if post.attachment %}
-          <img class="post-img" src="{{ post.attachment }}">
-          {% endif %}
-            <div class="post-actions">
-              <div class="pull-left">
-                <a class="like" href="/like/{{ post.id }}">
-                  <div class="like-icon"></div>
-                  <div class="like-text">0</div>
-                </a>
-                <a class="reply" href="/status/{{ post.id }}">
-                  <div class="reply-icon"></div>
-                  <div class="reply-text">{{ post.reply_count }} {% if post.reply_count == 1 %}reply{% else %}replies{% endif %}</div>
-                </a>
-              </div>
-              <div class="pull-right">
-                <a class="report" href="/report/{{post.id }}">
-                  <div class="report-text">Report</div>
-                  <div class="report-icon"></div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        {% include '/layouts/posts.twig' with { post: post } %}
     {% endfor %}
     <ul class="pager" style="padding:0px 10px;">
       {% if page > 1 %}
@@ -126,9 +56,11 @@
         <a href="/status/{{ post_id}}/{{ page - 1 }}">&larr; Newer</a>
       </li>
       {% endif %}
+      {% if replies|length == 15 %}
       <li class="next">
-        <a href="/status/{{ post_id}}/{{ page + 1 }}">Older &rarr; </a>
+        <a href="/status/{{ post_id }}/{{ page + 1 }}">Older &rarr; </a>
       </li>
+      {% endif %}
     </ul>
 {% else %}
     <div id="error" style="position: relative; width: 100%; min-height: 150px; margin-top: 20px; padding: 0 0 12px; text-align: center; font-size: 0;">

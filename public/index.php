@@ -107,6 +107,9 @@ $router->get('/user/{username}', function ($username) use ($userController) {
     $userController->user($username, 1);
 });
 
+$router->get('/follow/{username}', function($username) use ($userController) {
+    $userController->followUser($username);
+});
 
 $router->get('/register', function() use ($authController) {
     $authController->registerForm();

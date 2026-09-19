@@ -84,7 +84,7 @@ class PostModel extends BaseModel {
         return $stmt->get_result()->fetch_assoc();
     }
 
-    public function getPostsByUserId($userId) {
+    public function getPostsByUserId($user_id) {
         $stmt = $this->db->prepare('
             SELECT 
                 posts.*, 
@@ -101,36 +101,13 @@ class PostModel extends BaseModel {
             ORDER BY posts.id DESC
         ');
 
-        $stmt->bind_param('i', $userId);
+        $stmt->bind_param('i', $user_id);
         $stmt->execute();
 
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function getPostsByUsername($username) {
-        $stmt = $this->db->prepare('
-            SELECT 
-                posts.*, 
-                users.username AS author_name, 
-                users.avatar AS author_avatar,
-                users.display_name AS author_display_name,
-                reply_posts.content AS reply_to_content,
-                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
-            FROM posts
-            INNER JOIN users ON posts.author = users.id
-            LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
-            WHERE users.username = ?
-            AND users.suspended = 0
-            ORDER BY posts.id DESC
-        ');
-
-        $stmt->bind_param('s', $username);
-        $stmt->execute();
-
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    }
-
-    public function getPostReplies($postId, $limit = 15, $offset = 0) {
+    public function getPostReplies($post_id, $limit = 15, $offset = 0) {
         $stmt = $this->db->prepare('
             SELECT 
                 posts.*, 
@@ -144,10 +121,10 @@ class PostModel extends BaseModel {
             LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
             WHERE posts.reply_to = ?
             AND users.suspended = 0
-            ORDER BY posts.post_date ASC LIMIT ? OFFSET ?
+            ORDER BY posts.post_date DESC LIMIT ? OFFSET ?
         ');
 
-        $stmt->bind_param('iii', $postId, $limit, $offset);
+        $stmt->bind_param('iii', $post_id, $limit, $offset);
         $stmt->execute();
 
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);

@@ -297,6 +297,7 @@
   padding: 2px;
   border: 1px solid #ccc;
   width: auto;
+  max-height: 265px;
 }
 
 .post-actions {

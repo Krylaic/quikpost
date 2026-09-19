@@ -192,6 +192,10 @@ class AuthController {
             $_SESSION['notification'] = ['success', 'You have successfully verified your account!'];
             header('Location: /');
             exit;
+        } else {
+            $_SESSION['notification'] = ['success', 'There was an error verifying your account'];
+            header('Location: /');
+            exit;
         }
     }
 }
