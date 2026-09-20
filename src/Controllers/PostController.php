@@ -93,5 +93,12 @@ class PostController {
         ]);
     }
 
+    public function reportForm($id) {
+        $postModel = new PostModel();
+        echo $this->twig->render('core/report.twig', [
+            'post' => $postModel->getPostById($id)
+        ]);
+    }
+
 
 }

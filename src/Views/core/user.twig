@@ -104,6 +104,7 @@
                 </a>
               {% endfor %}
         </div>
+        <span style="text-align:right;"><a href="/following/{{user.username}}">See all following...</a></span>
         {% else %}
         <p class="text-body" style="margin:0;">{{user.username}} isn't following anybody yet!</p>
         {% endif %}
@@ -118,6 +119,7 @@
                 </a>
               {% endfor %}
         </div>
+        <span style="text-align:right;"><a href="/followers/{{user.username}}">See all followers...</a></span>
         {% else %}
         <p class="text-body" style="margin:0;">Nobody is following {{user.username}} yet!</p>
         {% endif %}

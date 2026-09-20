@@ -82,12 +82,12 @@ $router->get('/page/{page}', function($page) use ($pageController) {
     $pageController->index($page);
 });
 
-$router->get('/explore', function() use ($pageController) {
-    $pageController->explore();
-});
-
 $router->get('/explore/{page}', function($page) use ($pageController) {
     $pageController->explore($page);
+});
+
+$router->get('/explore', function() use ($pageController) {
+    $pageController->explore();
 });
 
 $router->get('/status/{status}/{page}', function ($status, $page) use ($postController) {
@@ -97,7 +97,6 @@ $router->get('/status/{status}/{page}', function ($status, $page) use ($postCont
 $router->get('/status/{status}', function ($status) use ($postController) {
     $postController->status($status, 1);
 });
-
 
 $router->get('/user/{username}/{page}', function ($username, $page) use ($userController) {
     $userController->user($username, $page);
@@ -109,6 +108,10 @@ $router->get('/user/{username}', function ($username) use ($userController) {
 
 $router->get('/follow/{username}', function($username) use ($userController) {
     $userController->followUser($username);
+});
+
+$router->get('/report/{post}', function($post) use ($postController) {
+    $postController->reportForm($post);
 });
 
 $router->get('/register', function() use ($authController) {
