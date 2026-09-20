@@ -114,6 +114,10 @@ $router->get('/report/{post}', function($post) use ($postController) {
     $postController->reportForm($post);
 });
 
+$router->post('/report/{post}', function($post) use ($postController) {
+    $postController->report($post);
+});
+
 $router->get('/register', function() use ($authController) {
     $authController->registerForm();
 });

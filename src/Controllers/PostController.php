@@ -6,6 +6,7 @@ use App\Models\PostModel;
 use App\Models\OptionsModel;
 use App\Models\NewsModel;
 use App\Models\UserModel;
+use App\Models\AuthModel;
 use App\Services\HelperService;
 
 class PostController {
@@ -100,5 +101,44 @@ class PostController {
         ]);
     }
 
+    public function report($id) {
+        $postModel = new PostModel();
+        $authModel = new AuthModel();
+
+        $captcha = $_POST['captcha'] ?? '';
+        $content = trim($_POST['content']) ?? '';
+
+        if(empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'Please log in!'];
+            header('Location: /login');
+            exit;
+        }
+
+        // captcha validation
+        if (!$authModel->verifyCaptcha($captcha)) {
+            $_SESSION['notification'] = ['error', 'Incorrect captcha'];
+            header('Location: /report/' . $id);
+            exit;
+        }
+
+        // content validation
+        if(empty($content)) {
+            $_SESSION['notification'] = ['error', 'Your report must contain a message!'];
+            header('Location: /report/' . $id);
+            exit;
+        }
+
+        $reported = $postModel->createReport($id, $content, $captcha);
+
+        if($reported['success']) {
+            $_SESSION['notification'] = ['success', 'Report successfully filed'];
+            header('Location: /');
+            exit;
+        } else {
+            $_SESSION['notification'] = ['error', $reported['error'] ?? 'Something went wrong'];
+            header('Location: /');
+            exit;
+        }
+    }
 
 }

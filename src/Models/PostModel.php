@@ -167,4 +167,38 @@ class PostModel extends BaseModel {
             return ['success' => false, 'error' => 'There was a problem making your post'];
         }
     }
+
+    public function createReport($id, $content, $captcha) {
+        // make sure the post exists
+        $stmt = $this->db->prepare('SELECT * FROM posts WHERE id = ?');
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result->num_rows == 0) {
+            return ['success' => false, 'error' => 'This post does not exist!'];
+        }
+
+        // limit to one report per user
+        $stmt = $this->db->prepare('SELECT * FROM reports WHERE post_id = ? AND user_id = ?');
+        $stmt->bind_param('ii', $id, $_SESSION['user_id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if($result->num_rows > 0) {
+            return ['success' => false, 'error' => 'You already reported this post!'];
+        }
+
+        // current date
+        $report_date = date('Y-m-d H:i:s');
+
+        // put the report in the db
+        $stmt = $this->db->prepare('INSERT INTO reports (content, post_id, user_id, report_date) VALUES (?, ?, ?, ?)');
+        $stmt->bind_param('siis', $content, $id, $_SESSION['user_id'], $report_date);
+        if($stmt->execute()) {
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'error' => 'Error submitting report.'];
+        }
+    }
 }
