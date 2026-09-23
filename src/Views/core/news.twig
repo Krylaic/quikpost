@@ -1,0 +1,12 @@
+{% extends '/layouts/base.twig' %}
+
+{% block content %}
+{% for post in news %}
+<h1>{{post.title}}</h1>
+<p>{{post.content}}</p>
+<br>
+<i>Written by {{post.author}} at {{post.post_date}}</i>
+{% endfor %}
+
+<hr>
+{% endblock %}

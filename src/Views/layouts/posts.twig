@@ -18,9 +18,9 @@
     {% endif %}
     <div class="post-actions">
         <div class="pull-left">
-        <a class="like" href="/like/{{ post.id }}">
+        <a class="like {% if post.is_liked is true%}like-pressed{%endif%}" href="/like/{{ post.id }}">
             <div class="like-icon"></div>
-            <div class="like-text">0</div>
+            <div class="like-text">{{post.likes}}</div>
         </a>
         <a class="reply" href="/status/{{ post.id }}">
             <div class="reply-icon"></div>

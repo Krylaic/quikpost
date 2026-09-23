@@ -307,7 +307,13 @@
 
 
 
+.like-pressed div {
+  background-position: -28px 0;
+}
 
+.like-pressed .like-text {
+  color: darkred;
+}
 
 
 .reply:hover .reply-icon { 

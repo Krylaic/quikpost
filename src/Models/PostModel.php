@@ -6,8 +6,10 @@ class PostModel extends BaseModel {
 
     // functions to fetch data
 
+    // any of these big massive fancy queries you see below are made with chatgpt, i can't be bothered to seriously learn how to make crazy queries like these.
+
     public function getAllPosts($limit, $offset) {
-        // i didnt make this query, chatgpt did
+        $current_user_id = (int)($_SESSION['user_id'] ?? 0);
         $stmt = $this->db->prepare('
             SELECT 
                 posts.*, 
@@ -15,7 +17,9 @@ class PostModel extends BaseModel {
                 users.avatar AS author_avatar,
                 users.display_name AS author_display_name,
                 reply_posts.content AS reply_to_content,
-                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS is_liked
             FROM posts
             INNER JOIN users ON posts.author = users.id
             LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
@@ -24,14 +28,14 @@ class PostModel extends BaseModel {
             LIMIT ? OFFSET ?
         ');
 
-        $stmt->bind_param('ii', $limit, $offset);
+        $stmt->bind_param('iii', $current_user_id, $limit, $offset);
         $stmt->execute();
         
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getFeedPosts($limit, $offset, $user) {
-        // i also didnt make this query chatgpt made it
+        $current_user_id = (int)($_SESSION['user_id'] ?? 0);
         $stmt = $this->db->prepare('
             SELECT 
                 posts.*, 
@@ -39,7 +43,9 @@ class PostModel extends BaseModel {
                 users.avatar AS author_avatar,
                 users.display_name AS author_display_name,
                 reply_posts.content AS reply_to_content,
-                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS is_liked
             FROM posts
             INNER JOIN users ON posts.author = users.id
             LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
@@ -56,13 +62,14 @@ class PostModel extends BaseModel {
             LIMIT ? OFFSET ?
         ');
 
-        $stmt->bind_param('ssii', $user, $user, $limit, $offset);
+        $stmt->bind_param('issii', $current_user_id, $user, $user, $limit, $offset);
         $stmt->execute();
 
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
     
     public function getPostById($postId) {
+        $current_user_id = (int)($_SESSION['user_id'] ?? 0);
         $stmt = $this->db->prepare('
             SELECT 
                 posts.*, 
@@ -70,7 +77,9 @@ class PostModel extends BaseModel {
                 users.avatar AS author_avatar,
                 users.display_name AS author_display_name,
                 reply_posts.content AS reply_to_content,
-                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS is_liked
             FROM posts
             INNER JOIN users ON posts.author = users.id
             LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
@@ -78,13 +87,14 @@ class PostModel extends BaseModel {
             AND users.suspended = 0
         ');
 
-        $stmt->bind_param('i', $postId);
+        $stmt->bind_param('ii', $current_user_id, $postId);
         $stmt->execute();
 
         return $stmt->get_result()->fetch_assoc();
     }
 
     public function getPostsByUserId($user_id, $limit = 15, $offset = 0) {
+        $current_user_id = (int)($_SESSION['user_id'] ?? 0);
         $stmt = $this->db->prepare('
             SELECT 
                 posts.*, 
@@ -92,7 +102,9 @@ class PostModel extends BaseModel {
                 users.avatar AS author_avatar,
                 users.display_name AS author_display_name,
                 reply_posts.content AS reply_to_content,
-                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS is_liked
             FROM posts
             INNER JOIN users ON posts.author = users.id
             LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
@@ -102,13 +114,14 @@ class PostModel extends BaseModel {
             LIMIT ? OFFSET ?
         ');
 
-        $stmt->bind_param('iii', $user_id, $limit, $offset);
+        $stmt->bind_param('iiii', $current_user_id, $user_id, $limit, $offset);
         $stmt->execute();
 
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getPostReplies($post_id, $limit = 15, $offset = 0) {
+        $current_user_id = (int)($_SESSION['user_id'] ?? 0);
         $stmt = $this->db->prepare('
             SELECT 
                 posts.*, 
@@ -116,7 +129,9 @@ class PostModel extends BaseModel {
                 users.avatar AS author_avatar,
                 users.display_name AS author_display_name,
                 reply_posts.content AS reply_to_content,
-                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS is_liked
             FROM posts
             INNER JOIN users ON posts.author = users.id
             LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
@@ -125,7 +140,7 @@ class PostModel extends BaseModel {
             ORDER BY posts.post_date DESC LIMIT ? OFFSET ?
         ');
 
-        $stmt->bind_param('iii', $post_id, $limit, $offset);
+        $stmt->bind_param('iiii', $current_user_id, $post_id, $limit, $offset);
         $stmt->execute();
 
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -199,6 +214,39 @@ class PostModel extends BaseModel {
             return ['success' => true];
         } else {
             return ['success' => false, 'error' => 'Error submitting report.'];
+        }
+    }
+
+    public function likePost($id) {
+        $stmt = $this->db->prepare('SELECT * FROM posts WHERE id = ?');
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result->num_rows == 0) {
+            return ['success' => false, 'error' => 'This post does not exist!'];
+        }
+
+        $stmt = $this->db->prepare('SELECT * FROM likes WHERE post_id = ? AND user_id = ? LIMIT 1');
+        $stmt->bind_param('ii', $id, $_SESSION['user_id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+
+        if ($result->num_rows == 0) {
+            $stmt = $this->db->prepare('INSERT INTO likes (post_id, user_id) VALUES (?, ?)');
+            $stmt->bind_param('ii', $id, $_SESSION['user_id']);
+            $stmt->execute();
+            $stmt->close();
+
+            return(["status" => "liked"]);
+        } else {
+            $stmt = $this->db->prepare('DELETE FROM likes WHERE post_id = ? AND user_id = ?');
+            $stmt->bind_param('ii', $id, $_SESSION['user_id']);
+            $stmt->execute();
+            $stmt->close();
+
+            return(["status" => "unliked"]);
         }
     }
 }

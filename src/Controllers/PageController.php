@@ -66,4 +66,14 @@ class PageController {
             'posts' => $postModel->getAllPosts(15, 0)
         ]);
     }
+
+    public function news() {
+        $optionsModel = new OptionsModel();
+        $newsModel = new NewsModel();
+        $postModel = new PostModel();
+        
+        echo $this->twig->render('core/news.twig', [
+            'news' => $newsModel->getNews()
+        ]);
+    }
 }

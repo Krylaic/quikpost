@@ -4,9 +4,9 @@ namespace App\Controllers;
 use Twig\Environment;
 use App\Models\PostModel;
 use App\Models\OptionsModel;
-use App\Models\NewsModel;
 use App\Models\UserModel;
 use App\Models\AuthModel;
+use App\Models\NewsModel;
 use App\Services\HelperService;
 
 class PostController {
@@ -139,6 +139,29 @@ class PostController {
             header('Location: /');
             exit;
         }
+    }
+
+    public function like($id) {
+        $postModel = new PostModel();
+
+        if (empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'Please log in!'];
+            header('Location: /login');
+            exit;
+        }
+
+        $target_id = $id;
+
+        $result = $postModel->likePost($target_id, $_SESSION['user_id']);
+
+        if (isset($result['error'])) {
+            $_SESSION['notification'] = ['error', $result['error']];
+            header('Location: /');
+            exit;
+        }
+
+        header('Location: /status/' . $id);
+        exit;
     }
 
 }

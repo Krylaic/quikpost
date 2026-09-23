@@ -90,6 +90,10 @@ $router->get('/explore', function() use ($pageController) {
     $pageController->explore();
 });
 
+$router->get('/news', function() use ($pageController) {
+    $pageController->news();
+});
+
 $router->get('/status/{status}/{page}', function ($status, $page) use ($postController) {
     $postController->status($status, $page);
 });
@@ -104,6 +108,10 @@ $router->get('/user/{username}/{page}', function ($username, $page) use ($userCo
 
 $router->get('/user/{username}', function ($username) use ($userController) {
     $userController->user($username, 1);
+});
+
+$router->get('/like/{id}', function($id) use ($postController) {
+    $postController->like($id);
 });
 
 $router->get('/follow/{username}', function($username) use ($userController) {
