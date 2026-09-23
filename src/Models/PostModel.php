@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Models\UserModel;
 
 class PostModel extends BaseModel {
 
@@ -150,6 +151,8 @@ class PostModel extends BaseModel {
     // functions to update data
 
     public function createPost($content, $author, $attachment, $reply_to) {
+        $userModel = new UserModel();
+
         $post_date = date('Y-m-d H:i:s');
 
         // rate limiting
@@ -159,6 +162,10 @@ class PostModel extends BaseModel {
         $result = $stmt->get_result();
         if ($result->num_rows >= 3) {  
             return ['success' => false, 'error' => 'Please wait a bit before posting again!'];
+        }
+
+        if($userModel->fetchVerificationStatus($_SESSION['user_id']) == false) {
+            return ['success' => false, 'error' => 'Please verify before posting!'];
         }
 
         // make sure the post the user is replying to actually exists
