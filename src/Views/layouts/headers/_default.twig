@@ -16,10 +16,10 @@
                     </li>
 
                 </ul>
-                {% if current_user %}
-                    <form class="navbar-search pull-left" action="/search" method="GET">
+                <form class="navbar-search pull-left" action="/search" method="GET">
                         <input type="text" class="search-query" placeholder="Search">
                     </form>
+                {% if current_user %}
                     <ul class="nav pull-right">
                         <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ current_user.display_name ?? current_user.username }} <b class="caret"></b><div style="position: relative; width: 20.5px; height: 20.5px;border: #ccc 1px solid; border-radius: 3px;float:left;margin-right:5px;">

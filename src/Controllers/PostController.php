@@ -95,6 +95,12 @@ class PostController {
     }
 
     public function reportForm($id) {
+        if(empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'Please log in!'];
+            header('Location: /login');
+            exit;
+        }
+
         $postModel = new PostModel();
         echo $this->twig->render('core/report.twig', [
             'post' => $postModel->getPostById($id)
