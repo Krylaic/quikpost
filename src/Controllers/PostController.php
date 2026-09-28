@@ -156,9 +156,7 @@ class PostController {
             exit;
         }
 
-        $target_id = $id;
-
-        $result = $postModel->likePost($target_id, $_SESSION['user_id']);
+        $result = $postModel->likePost($id, $_SESSION['user_id']);
 
         if (isset($result['error'])) {
             $_SESSION['notification'] = ['error', $result['error']];
@@ -167,6 +165,28 @@ class PostController {
         }
 
         header('Location: /status/' . $id);
+        exit;
+    }
+
+    public function delete($id) {
+        $postModel = new PostModel();
+
+        if (empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'Please log in!'];
+            header('Location: /login');
+            exit;
+        }
+
+        $result = $postModel->deletePost($id, $_SESSION['user_id']);
+
+        if (isset($result['error'])) {
+            $_SESSION['notification'] = ['error', $result['error']];
+            header('Location: /');
+            exit;
+        }
+
+        $_SESSION['notification'] = ['success', 'Post successfully deleted'];
+        header('Location: /');
         exit;
     }
 

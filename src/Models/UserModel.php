@@ -54,6 +54,16 @@ class UserModel extends BaseModel {
         return $row['avatar'] ?? false;
     }
 
+    public function fetchAdminStatus($user_id) {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
+        $stmt->bind_param('s', $user_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['admin_level'] ?? 0;
+    }
+
     public function fetchVerificationStatus($user_id) {
         $stmt = $this->db->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
         $stmt->bind_param('s', $user_id);

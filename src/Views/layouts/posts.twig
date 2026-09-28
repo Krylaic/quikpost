@@ -28,10 +28,23 @@
         </a>
         </div>
         <div class="pull-right">
+        {% if post.author != current_user.id %}
         <a class="report" href="/report/{{post.id }}">
             <div class="report-text">Report</div>
             <div class="report-icon"></div>
         </a>
+        {% if current_user.admin_level > 0 %}
+        <a class="delete" href="/delete/{{post.id }}">
+            <div class="delete-text">Delete</div>
+            <div class="delete-icon"></div>
+        </a>
+        {%endif%}
+        {% else %}
+        <a class="delete" href="/delete/{{post.id }}">
+            <div class="delete-text">Delete</div>
+            <div class="delete-icon"></div>
+        </a>
+        {% endif %}
         </div>
     </div>
     </div>

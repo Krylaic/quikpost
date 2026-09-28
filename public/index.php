@@ -114,6 +114,10 @@ $router->get('/like/{id}', function($id) use ($postController) {
     $postController->like($id);
 });
 
+$router->get('/delete/{id}', function($id) use ($postController) {
+    $postController->delete($id);
+});
+
 $router->get('/follow/{username}', function($username) use ($userController) {
     $userController->followUser($username);
 });

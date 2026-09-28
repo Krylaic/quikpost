@@ -385,16 +385,7 @@
     color: darkred; 
 }
 
-.report-icon {
-    width: 14px; 
-    height: 14px; 
-    background-image: url(/assets/img/post-actions.png); 
-    float: left;
-    background-position: 0px 15px; 
-    image-rendering: -webkit-optimize-contrast; 
-    image-rendering: crisp-edges;
-    image-rendering: pixelated;
-}
+
 
 .report-text {
     width: 64px; 
@@ -421,6 +412,49 @@
     background-image: url(/assets/img/post-actions.png); 
     float: left;
     background-position: 0px -27px; 
+    image-rendering: -webkit-optimize-contrast; 
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    margin-top:1px;
+}
+
+
+
+
+
+.delete:hover .delete-icon { 
+    background-position: -14px 15px; 
+}
+
+.delete:hover .delete-text { 
+    color: darkred; 
+}
+
+.delete-text {
+    width: 48px; 
+    height: 14px; 
+    color: gray; 
+    float: left; 
+    font-weight: bold; 
+    margin-right: 4px; 
+    text-align: right;
+}
+
+
+.delete:hover .delete-icon { 
+    background-position: -14px -41px; 
+}
+
+.delete:hover .delete-text { 
+    color: darkred; 
+}
+
+.delete-icon {
+    width: 14px; 
+    height: 14px; 
+    background-image: url(/assets/img/post-actions.png); 
+    float: left;
+    background-position: 0px -41px; 
     image-rendering: -webkit-optimize-contrast; 
     image-rendering: crisp-edges;
     image-rendering: pixelated;

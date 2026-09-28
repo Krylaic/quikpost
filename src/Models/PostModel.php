@@ -225,6 +225,7 @@ class PostModel extends BaseModel {
     }
 
     public function likePost($id) {
+        // make sure post exists
         $stmt = $this->db->prepare('SELECT * FROM posts WHERE id = ?');
         $stmt->bind_param('i', $id);
         $stmt->execute();
@@ -234,6 +235,7 @@ class PostModel extends BaseModel {
             return ['success' => false, 'error' => 'This post does not exist!'];
         }
 
+        // check if the post has already been liked by the user
         $stmt = $this->db->prepare('SELECT * FROM likes WHERE post_id = ? AND user_id = ? LIMIT 1');
         $stmt->bind_param('ii', $id, $_SESSION['user_id']);
         $stmt->execute();
@@ -241,6 +243,7 @@ class PostModel extends BaseModel {
         $stmt->close();
 
         if ($result->num_rows == 0) {
+            // if not, add a like to the post
             $stmt = $this->db->prepare('INSERT INTO likes (post_id, user_id) VALUES (?, ?)');
             $stmt->bind_param('ii', $id, $_SESSION['user_id']);
             $stmt->execute();
@@ -248,6 +251,7 @@ class PostModel extends BaseModel {
 
             return(["status" => "liked"]);
         } else {
+            // otherwise, unlike the post
             $stmt = $this->db->prepare('DELETE FROM likes WHERE post_id = ? AND user_id = ?');
             $stmt->bind_param('ii', $id, $_SESSION['user_id']);
             $stmt->execute();
@@ -255,5 +259,32 @@ class PostModel extends BaseModel {
 
             return(["status" => "unliked"]);
         }
+    }
+
+    public function deletePost($id) {
+        $userModel = new UserModel();
+
+        // make sure post exists
+        $stmt = $this->db->prepare('SELECT * FROM posts WHERE id = ?');
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result->num_rows == 0) {
+            return ['success' => false, 'error' => 'This post does not exist!'];
+        }
+
+        $post = $result->fetch_assoc();
+
+        $admin_level = $userModel->fetchAdminStatus($_SESSION['user_id']);
+
+        if ($admin_level <= 0 && $post['author'] != $_SESSION['user_id']) {
+            return ['success' => false, 'error' => 'You do not have permission to delete this post!'];
+        }
+
+        $stmt = $this->db->prepare('DELETE FROM posts WHERE id = ?');
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        return ['success' => true];
     }
 }
