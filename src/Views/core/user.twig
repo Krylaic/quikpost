@@ -23,7 +23,7 @@
     {% if current_user and current_user.username != user.username %}
       <a href="/follow/{{ user.username }}" class="btn btn-mini" style="margin-bottom: 3px;margin-right:6px;">{% if is_following is true %}Unfollow{% else%}Follow{% endif %}</a>
     {% endif %}
-    <i class="icon-user"></i>{{ followers|length }} follower{% if followers|length != 1 %}s{% endif%}
+    <i class="icon-user"></i>{{ followers[0].total ?? 0 }} follower{% if followers[0].total ?? 0 != 1 %}s{% endif%}
   </span>
 </div>
 <div class="dashboard-row clearfix">
