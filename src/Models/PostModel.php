@@ -35,6 +35,34 @@ class PostModel extends BaseModel {
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function getPostsByQuery($query, $limit, $offset) {
+        $current_user_id = (int)($_SESSION['user_id'] ?? 0);
+        $search_term = '%' . $query . '%';
+
+        $stmt = $this->db->prepare('
+            SELECT 
+                posts.*, 
+                users.username AS author_name, 
+                users.avatar AS author_avatar,
+                users.display_name AS author_display_name,
+                reply_posts.content AS reply_to_content,
+                (SELECT COUNT(*) FROM posts AS replies WHERE replies.reply_to = posts.id) AS reply_count,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+                (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS is_liked
+            FROM posts
+            INNER JOIN users ON posts.author = users.id
+            LEFT JOIN posts AS reply_posts ON posts.reply_to = reply_posts.id
+            WHERE users.suspended = 0 AND posts.content LIKE ?
+            ORDER BY posts.post_date DESC
+            LIMIT ? OFFSET ?
+        ');
+
+        $stmt->bind_param('isii', $current_user_id, $search_term, $limit, $offset);
+        $stmt->execute();
+        
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function getFeedPosts($limit, $offset, $user) {
         $current_user_id = (int)($_SESSION['user_id'] ?? 0);
         $stmt = $this->db->prepare('
@@ -299,4 +327,6 @@ class PostModel extends BaseModel {
         $stmt->execute();
         return ['success' => true];
     }
+
+    
 }

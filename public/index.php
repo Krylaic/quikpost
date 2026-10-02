@@ -94,6 +94,12 @@ $router->get('/explore', function() use ($pageController) {
     $pageController->explore();
 });
 
+// search
+
+$router->get('/search', function() use ($postController) {
+    $postController->search($_GET['query'] ?? '', $_GET['page'] ?? 1);
+});
+
 // news
 
 $router->get('/news', function() use ($pageController) {

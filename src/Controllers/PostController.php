@@ -100,6 +100,22 @@ class PostController {
         ]);
     }
 
+    public function search($query, $page = 1) {
+        $optionsModel = new OptionsModel();
+        $newsModel = new NewsModel();
+        $postModel = new PostModel();
+        $userModel = new UserModel();
+        
+        echo $this->twig->render('core/feeds/search.twig', [
+            'about' => $optionsModel->getAbout(),
+            'news' => $newsModel->getLatestNews(),
+            'posts' => $postModel->getPostsByQuery($query, 15, ($page - 1)*15),
+            'users' => $userModel->fetchRecentUsers(10, 0),
+            'page' => $page,
+            'query' => $query
+        ]);
+    }
+
     public function reportForm($id) {
         if(empty($_SESSION['user_id'])) {
             $_SESSION['notification'] = ['error', 'Please log in!'];
