@@ -183,4 +183,34 @@ class UserModel extends BaseModel {
         }
     }
 
+    public function getLastSong($username) {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE username = ?');
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result->num_rows == 0) {
+            return false;
+        }
+
+        $row = $result->fetch_assoc();
+
+        if (empty($row['lastfm_username'])) {
+            return false;
+        }
+
+        $lastfm_username = urlencode($row['lastfm_username']);
+        $api_key = $_ENV['LASTFM_KEY'] ?? '';
+
+        $url = 'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=' . $lastfm_username . '&api_key=' . $api_key . '&format=json&limit=1';
+
+        $response = @file_get_contents($url);
+
+        if($response !== false) {
+            return $response;
+        }
+        
+        return false;
+    }
+
 }

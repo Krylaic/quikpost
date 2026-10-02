@@ -32,6 +32,7 @@ class UserController {
             'following' => $userModel->fetchFollowing($user_id, 10, 0),
             'followers' => $userModel->fetchFollowers($user_id, 10, 0),
             'is_following' => $userModel->isFollowing($_SESSION['user_id'] ?? null, $user_id),
+            'last_song' => json_decode($userModel->getLastSong($username), true),
             'page' => $page
         ]);
     }
