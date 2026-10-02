@@ -85,6 +85,12 @@ class PostController {
         $postModel = new PostModel();
         $userModel = new UserModel();
 
+        if(!$postModel->doesPostExist($id)){
+            $_SESSION['notification'] = ['error', 'This post doesnt exist!'];
+            header('Location: /');
+            exit;
+        }
+
         echo $this->twig->render('core/status.twig', [
             'news' => $newsModel->getLatestNews(),
             'post' => $postModel->getPostById($id),
