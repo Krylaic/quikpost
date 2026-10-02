@@ -118,7 +118,8 @@ class UserModel extends BaseModel {
 
     public function fetchFollowing($user_id, $limit, $offset) {
         $stmt = $this->db->prepare('
-            SELECT u.* FROM users u 
+            SELECT u.*, COUNT(*) OVER() AS total 
+            FROM users u 
             JOIN followers f ON u.id = f.following 
             WHERE f.follower = ? 
             LIMIT ? OFFSET ?
@@ -131,7 +132,8 @@ class UserModel extends BaseModel {
 
     public function fetchFollowers($user_id, $limit, $offset) {
         $stmt = $this->db->prepare('
-            SELECT u.* FROM users u 
+            SELECT u.*, COUNT(*) OVER() AS total 
+            FROM users u 
             JOIN followers f ON u.id = f.follower 
             WHERE f.following = ? 
             LIMIT ? OFFSET ?

@@ -74,6 +74,8 @@ if (!empty($_SESSION['user_id'])) {
 $router = new Router();
 
 // routes
+
+// homepage
 $router->get('/', function() use ($pageController) {
     $pageController->index();
 });
@@ -81,6 +83,8 @@ $router->get('/', function() use ($pageController) {
 $router->get('/page/{page}', function($page) use ($pageController) {
     $pageController->index($page);
 });
+
+// explore
 
 $router->get('/explore/{page}', function($page) use ($pageController) {
     $pageController->explore($page);
@@ -90,9 +94,13 @@ $router->get('/explore', function() use ($pageController) {
     $pageController->explore();
 });
 
+// news
+
 $router->get('/news', function() use ($pageController) {
     $pageController->news();
 });
+
+// status 
 
 $router->get('/status/{status}/{page}', function ($status, $page) use ($postController) {
     $postController->status($status, $page);
@@ -102,6 +110,8 @@ $router->get('/status/{status}', function ($status) use ($postController) {
     $postController->status($status, 1);
 });
 
+// user
+
 $router->get('/user/{username}/{page}', function ($username, $page) use ($userController) {
     $userController->user($username, $page);
 });
@@ -109,6 +119,8 @@ $router->get('/user/{username}/{page}', function ($username, $page) use ($userCo
 $router->get('/user/{username}', function ($username) use ($userController) {
     $userController->user($username, 1);
 });
+
+// post actions
 
 $router->get('/like/{id}', function($id) use ($postController) {
     $postController->like($id);
@@ -118,9 +130,30 @@ $router->get('/delete/{id}', function($id) use ($postController) {
     $postController->delete($id);
 });
 
+// follow user 
 $router->get('/follow/{username}', function($username) use ($userController) {
     $userController->followUser($username);
 });
+
+// following/followers pages
+
+$router->get('/followers/{username}/{page}', function ($username, $page) use ($userController) {
+    $userController->followers($username, $page);
+});
+
+$router->get('/followers/{username}', function($username) use ($userController) {
+    $userController->followers($username, 1);
+});
+
+$router->get('/following/{username}/{page}', function ($username, $page) use ($userController) {
+    $userController->following($username, $page);
+});
+
+$router->get('/following/{username}', function($username) use ($userController) {
+    $userController->following($username, 1);
+});
+
+// post reporting
 
 $router->get('/report/{post}', function($post) use ($postController) {
     $postController->reportForm($post);
@@ -130,6 +163,8 @@ $router->post('/report/{post}', function($post) use ($postController) {
     $postController->report($post);
 });
 
+// acc registration
+
 $router->get('/register', function() use ($authController) {
     $authController->registerForm();
 });
@@ -138,6 +173,8 @@ $router->post('/register', function() use ($authController) {
     $authController->register();
 });
 
+// acc login
+
 $router->get('/login', function() use ($authController) {
     $authController->loginForm();
 });
@@ -145,6 +182,8 @@ $router->get('/login', function() use ($authController) {
 $router->post('/login', function() use ($authController) {
     $authController->login();
 });
+
+// post
 
 $router->post('/post', function() use ($postController) {
     $postController->createPost();

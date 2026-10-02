@@ -95,7 +95,7 @@
         <p class="text-body" style="margin:0;">{{ user.bio ?? 'This user hasn\'t written a biography yet.' }}</p>
     </div>
     <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
-        <div style="font-size: 1.0rem; font-weight: 600;">Following ({{ following|length }})</div>
+        <div style="font-size: 1.0rem; font-weight: 600;">Following ({{ following[0].total ?? 0 }})</div>
         {% if following is not empty %}
         <div class="user-grid">
               {% for f_user in following %}
@@ -110,7 +110,7 @@
         {% endif %}
     </div>
     <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
-        <div style="font-size: 1.0rem; font-weight: 600;">Followers ({{ followers|length }})</div>
+        <div style="font-size: 1.0rem; font-weight: 600;">Followers ({{ followers[0].total ?? 0 }})</div>
         {% if followers is not empty %}
         <div class="user-grid">
               {% for f_user in followers %}

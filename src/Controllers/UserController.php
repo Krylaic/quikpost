@@ -36,6 +36,54 @@ class UserController {
         ]);
     }
 
+    public function followers($username, $page = 1) {
+        $postModel = new PostModel();
+        $userModel = new UserModel();
+
+        $user = $userModel->fetchAllUserDataByUsername($username);
+
+        if (!$user || $userModel->fetchBanStatus($user['id']) == true) {
+            $_SESSION['notification'] = ['error', 'This user does not exist or has been suspended!'];
+            header('Location: /');
+            exit;
+        }
+
+        $user_id = $user['id'];
+
+        echo $this->twig->render('core/followers.twig', [
+            'user' => $user,
+            'followers' => $userModel->fetchFollowers($user_id, 15, ($page - 1)*15),
+            'side_following' => $userModel->fetchFollowing($user_id, 10, 0),
+            'side_followers' => $userModel->fetchFollowers($user_id, 10, 0),
+            'is_following' => $userModel->isFollowing($_SESSION['user_id'] ?? null, $user_id),
+            'page' => $page
+        ]);
+    }
+
+    public function following($username, $page = 1) {
+        $postModel = new PostModel();
+        $userModel = new UserModel();
+
+        $user = $userModel->fetchAllUserDataByUsername($username);
+
+        if (!$user || $userModel->fetchBanStatus($user['id']) == true) {
+            $_SESSION['notification'] = ['error', 'This user does not exist or has been suspended!'];
+            header('Location: /');
+            exit;
+        }
+
+        $user_id = $user['id'];
+
+        echo $this->twig->render('core/following.twig', [
+            'user' => $user,
+            'following' => $userModel->fetchFollowing($user_id, 15, ($page - 1)*15),
+            'side_following' => $userModel->fetchFollowing($user_id, 10, 0),
+            'side_followers' => $userModel->fetchFollowers($user_id, 10, 0),
+            'is_following' => $userModel->isFollowing($_SESSION['user_id'] ?? null, $user_id),
+            'page' => $page
+        ]);
+    }
+
     public function followUser($username) {
         $userModel = new UserModel();
 
