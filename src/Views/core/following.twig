@@ -107,6 +107,22 @@
         <p class="text-body" style="margin:0;">Nobody is following {{user.username}} yet!</p>
         {% endif %}
     </div>
+    {% if user.lastfm_username and last_song and last_song.recenttracks.track is defined and last_song.recenttracks.track|length > 0 %}
+      {% set track = last_song.recenttracks.track[0] %}
+      <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+          <div style="font-size: 1.0rem; font-weight: 600;">Last Listened To</div>
+          <div style="margin-right: -6px;">
+              {% if track.image[1]['#text'] %}
+                  <img class="pull-left"src="{{ track.image[1]['#text'] }}" width="35" height="35"style="border:1px solid #cccccc; border-radius:4px;">
+              {% endif %}
+              <div class="pull-left" style="margin-left: 4px;">
+                  <strong><p class="text-body" style="margin:0;max-width: 160px;">{{ track.name }}</p></strong>
+                  <p class="text-body"style="color: #666;margin:0;margin-top: -4px;">by {{ track.artist['#text'] }}</p>
+              </div> 
+          </div>
+          <span style="text-align:right;"><a href="https://www.last.fm/user/{{user.lastfm_username}}">View more on Last.FM... </a></span>
+      </div>
+  {% endif %}
   </div>
 </div>
 
@@ -131,16 +147,37 @@
 }
 
 .big-user-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+    zoom: 1;
+    display: table;
+    clear: both;
 }
+
 .user-card {
+    float: left;
     width: 90px;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.user-card img,
+.user-card .avatar {
+    display: block;
+    margin: 0 auto;
+}
+
+.user-card p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.user-card p a {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 </style>

@@ -126,6 +126,16 @@ $router->get('/user/{username}', function ($username) use ($userController) {
     $userController->user($username, 1);
 });
 
+// profile customization
+
+$router->get('/profile', function () use ($userController) {
+    $userController->profile();
+});
+
+$router->post('/profile', function () use ($userController) {
+    $userController->updateProfile();
+});
+
 // post actions
 
 $router->get('/like/{id}', function($id) use ($postController) {

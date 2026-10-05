@@ -212,5 +212,56 @@ class UserModel extends BaseModel {
         
         return false;
     }
+    
+    public function updateProfile($user_id, $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username) {
+        $stmt = $this->db->prepare('SELECT email FROM users WHERE id = ? LIMIT 1');
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+
+        if (!$user) {
+            return ['success' => false, 'error' => 'User not found!'];
+        }
+
+        $email_changed = strtolower($email) !== strtolower($user['email']);
+        $verify_token = null;
+
+        if ($email_changed) {
+            $stmt = $this->db->prepare('SELECT 1 FROM users WHERE email = ? AND id != ? LIMIT 1');
+            $stmt->bind_param('si', $email, $user_id);
+            $stmt->execute();
+
+            if ($stmt->get_result()->num_rows > 0) {
+                $stmt->close();
+                return ['success' => false, 'error' => 'That email address is already in use!'];
+            }
+
+            $stmt->close();
+
+            $verify_token = bin2hex(random_bytes(32));
+        }
+
+        if ($email_changed) {
+            $stmt = $this->db->prepare('UPDATE users SET display_name = ?, bio = ?, location = ?, avatar = ?, banner = ?, email = ?, lastfm_username = ?, verified = 0, verify_token = ? WHERE id = ? LIMIT 1');
+            $stmt->bind_param('ssssssssi', $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username, $verify_token, $user_id);
+        } else {
+            $stmt = $this->db->prepare('UPDATE users SET display_name = ?, bio = ?, location = ?, avatar = ?, banner = ?, lastfm_username = ? WHERE id = ? LIMIT 1');
+            $stmt->bind_param('ssssssi', $display_name, $bio, $location, $avatar, $banner, $lastfm_username, $user_id);
+        }
+
+        if (!$stmt->execute()) {
+            $stmt->close();
+            return ['success' => false, 'error' => 'There was an error updating your profile!'];
+        }
+
+        $stmt->close();
+
+        return ['success' => true, 'email_changed' => $email_changed, 'verify_token' => $verify_token];
+    }
+
+
 
 }

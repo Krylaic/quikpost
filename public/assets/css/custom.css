@@ -460,3 +460,18 @@
     image-rendering: pixelated;
     margin-top:1px;
 }
+
+.profile-header-inner img {
+  width:77px;
+  height:77px;
+}
+
+.dropdown-toggle img {
+  width: 20.5px;
+  height: 20.5px;
+}
+
+.user-avatar img {
+  width: 35px;
+  height: 35px;
+}
