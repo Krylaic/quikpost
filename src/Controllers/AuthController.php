@@ -123,7 +123,7 @@ class AuthController {
         if ($registered['success']) {
             $verify_token = $registered['token'];
             $email_html = '
-                <p>Welcome to ' . $site_name . ', ' . $username . '!</p>
+                <p>Welcome to ' . $site_name . ', ' . htmlspecialchars($username) . '!</p>
                 <p>To complete registration, click <a href="https://' . $domain . '/verify/' . $verify_token . '">here</a> to verify your account!</p>
                 <p>If this wasn\'t you, please ignore this email.</p>
             ';

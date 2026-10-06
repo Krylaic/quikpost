@@ -237,7 +237,7 @@ class UserController {
             $verify_token = $result['verify_token'];
 
             $email_html = '
-                <p>Hello ' . ($display_name ?: $current_user['username']) . '!</p>
+                <p>Hello ' . htmlspecialchars($current_user['username']) . '!</p>
                 <p>Your email address for your ' . $site_name . ' account has been changed.</p>
                 <p>To verify your new email address, click <a href="https://' . $domain . '/verify/' . $verify_token . '">here</a>.</p>
                 <p>If this wasn\'t you, please ignore this email.</p>
