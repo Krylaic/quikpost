@@ -152,11 +152,11 @@ class UserController {
             exit;
         }
 
-        $display_name = trim($_POST['display_name'] ?? '');
-        $bio = trim($_POST['bio'] ?? '');
-        $location = trim($_POST['location'] ?? '');
+        $display_name = trim($_POST['display_name'] ?? '') ?: null;
+        $bio = trim($_POST['bio'] ?? '') ?: null;
+        $location = trim($_POST['location'] ?? '') ?: null;
         $email = trim($_POST['email'] ?? '');
-        $lastfm_username = trim($_POST['lastfm_username'] ?? '');
+        $lastfm_username = trim($_POST['lastfm_username'] ?? '') ?: null;
 
         if (strlen($display_name) > 50) {
             $_SESSION['notification'] = ['error', 'Your display name must be less than 50 characters!'];
