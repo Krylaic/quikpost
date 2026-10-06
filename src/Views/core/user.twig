@@ -127,8 +127,8 @@
     {% if user.lastfm_username and last_song and last_song.recenttracks.track is defined and last_song.recenttracks.track|length > 0 %}
       {% set track = last_song.recenttracks.track[0] %}
       <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
-          <div style="font-size: 1.0rem; font-weight: 600;">Last Listened To</div>
-          <div style="margin-right: -6px;">
+          <div style="font-size: 1.0rem; font-weight: 600;">Last Listened To <img src="/assets/img/lastfm.png" width="16"></div>
+          <div style="margin-right: -6px;height: 38px;">
               {% if track.image[1]['#text'] %}
                   <img class="pull-left"src="{{ track.image[1]['#text'] }}" width="35" height="35"style="border:1px solid #cccccc; border-radius:4px;">
               {% endif %}
