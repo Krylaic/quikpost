@@ -2,7 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.-- Generation Time: Oct 02, 2026 at 02:06 AM
+-- Host: 127.0.0.1
+-- Generation Time: Oct 06, 2026 at 05:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -155,7 +156,8 @@ CREATE TABLE `users` (
   `join_date` datetime NOT NULL,
   `verified` tinyint(4) NOT NULL DEFAULT 0,
   `verify_token` varchar(255) DEFAULT NULL,
-  `reset_token` varchar(255) DEFAULT NULL
+  `reset_token` varchar(255) DEFAULT NULL,
+  `lastfm_username` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -266,16 +268,6 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
--
--- AUTO_INCREMENT for table `options`
---
-ALTER TABLE `options`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `posts`
---
-ALTER TABLE `posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
