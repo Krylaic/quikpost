@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2026 at 05:16 AM
+-- Generation Time: Oct 07, 2026 at 04:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,19 @@ SET time_zone = "+00:00";
 --
 -- Database: `quikpost`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact`
+--
+
+CREATE TABLE `contact` (
+  `id` int(11) NOT NULL,
+  `content` varchar(10000) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `contact_date` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -96,6 +109,9 @@ CREATE TABLE `options` (
   `slogan` varchar(255) DEFAULT NULL,
   `domain` varchar(255) NOT NULL,
   `about` text DEFAULT NULL,
+  `tos` text DEFAULT NULL,
+  `privacy_policy` text DEFAULT NULL,
+  `community_guidelines` text DEFAULT NULL,
   `ip_check` tinyint(4) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -103,8 +119,8 @@ CREATE TABLE `options` (
 -- Dumping data for table `options`
 --
 
-INSERT INTO `options` (`id`, `name`, `slogan`, `domain`, `about`, `ip_check`) VALUES
-(1, 'Quikpost', 'Share your Thoughts', 'localhost', 'Quikpost is a simple social media website that allows users to share their thoughts quickly. Click the button below to sign up and start crafting your feed or share your thoughts. Alternatively, you can click the Explore button to view the latest posts for completely free.', 0);
+INSERT INTO `options` (`id`, `name`, `slogan`, `domain`, `about`, `tos`, `privacy_policy`, `community_guidelines`, `ip_check`) VALUES
+(1, 'Quikpost', 'Share your Thoughts', 'localhost', 'Quikpost is a simple social media website that allows users to share their thoughts quickly. Click the button below to sign up and start crafting your feed or share your thoughts. Alternatively, you can click the Explore button to view the latest posts for completely free.', 'Last updated: 10/06/2026\n\n\"We\", \"our\", \"us\", \"the site\", and \"our site\" refers to this website, Quikpost, and/or the people running it.\n\nBy using our website, you agree to these terms of service.\n\nWhile Quikpost is open source, these terms apply specifically to this hosted instance of Quikpost.\n\nWhen registering for the site, you agree that you are providing accurate information and that you are the age of 13 or older.\n\nWe have the right to terminate or suspend your account at any time for any reason.\n\nOur site is provided \"as is\" without any warranties of any kind.\n\nWe may update these terms of service occasionally.', 'Last updated: 10/06/2026\n\nWe collect only the necessary amount of data for our site to function.\n\nThe information we collect includes your username, email address (for verification), a hash of your password, the date you joined the website, all IP addresses you have used on the site (for spam prevention), and any additional information you decide to add to your profile, such as the location you set, your biography, and Last.FM username.\n\nOur site is proxied through Cloudflare, which means they may collect certain information that we do not have access to.\n\nWe process this data based on your consent when you register for an account, and you have the right to view, modify, or remove your information at any time, and you can contact us <a href=\"/contact\">here</a>.\n\nWe may update this privacy policy occasionally.\n', 'Still working on these', 0);
 
 -- --------------------------------------------------------
 
@@ -165,6 +181,12 @@ CREATE TABLE `users` (
 --
 
 --
+-- Indexes for table `contact`
+--
+ALTER TABLE `contact`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `emails`
 --
 ALTER TABLE `emails`
@@ -221,6 +243,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `contact`
+--
+ALTER TABLE `contact`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `emails`
