@@ -214,6 +214,7 @@ class UserModel extends BaseModel {
     }
     
     public function updateProfile($user_id, $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username) {
+        // this function is like partially gpt srry
         $stmt = $this->db->prepare('SELECT email FROM users WHERE id = ? LIMIT 1');
         $stmt->bind_param('i', $user_id);
         $stmt->execute();

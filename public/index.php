@@ -199,6 +199,31 @@ $router->post('/login', function() use ($authController) {
     $authController->login();
 });
 
+// documentation pages
+
+$router->get('/tos', function() use ($pageController) {
+    $pageController->tos();
+});
+
+$router->get('/privacy', function() use ($pageController) {
+    $pageController->privacy();
+});
+
+$router->get('/community_guidelines', function() use ($pageController) {
+    $pageController->guidelines();
+});
+
+// contact
+
+$router->get('/contact', function() use ($pageController) {
+    $pageController->contactForm();
+});
+
+$router->post('/contact', function() use ($pageController) {
+    $pageController->contact();
+});
+
+
 // post
 
 $router->post('/post', function() use ($postController) {
