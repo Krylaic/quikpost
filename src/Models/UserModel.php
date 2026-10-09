@@ -264,5 +264,53 @@ class UserModel extends BaseModel {
     }
 
 
+    // statistics stuff
 
+    public function getCountAllUsers() {
+        $stmt = $this->db->prepare('SELECT * FROM users');
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result->num_rows;
+    }
+
+    public function getCountUnbannedUsers() {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE suspended = 0');
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result->num_rows;
+    }
+
+    public function getCountBannedUsers() {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE suspended = 1');
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result->num_rows;
+    }
+
+    public function getCountVerifiedUsers() {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE verified = 1');
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result->num_rows;
+    }
+
+    public function getCountAdminUsers() {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE admin_level > 0');
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result->num_rows;
+    }
+
+    public function getCountFollows() {
+        $stmt = $this->db->prepare('SELECT * FROM followers');
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result->num_rows;
+    }
 }

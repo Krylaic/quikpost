@@ -328,5 +328,12 @@ class PostModel extends BaseModel {
         return ['success' => true];
     }
 
+    // statistics
+    public function getCountAllPosts() {
+        $stmt = $this->db->prepare('SELECT * FROM posts');
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows;
+    }
     
 }

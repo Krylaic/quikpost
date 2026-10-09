@@ -1,0 +1,35 @@
+{% extends '/core/admin/base.twig' %} {% block tool %}
+<h3>General Statistics</h3>
+<div class="clearfix" id="usernameField">
+    <p><strong>All Users: </strong>{{all_users}}</p>
+    <p><strong>Unbanned Users: </strong>{{unbanned_users}}</p>
+    <p><strong>Terminated Users: </strong>{{banned_users}}</p>
+    <p><strong>Verified Users: </strong>{{verified_users}}</p>
+    <p><strong>Admins: </strong>{{admin_users}}</p>
+    <p><strong>Total Follows: </strong>{{follows}}</p>
+    <p><strong>Posts: </strong>{{posts}}</p>
+</div>
+<hr>
+<table class="table-striped table table-bordered" cellspacing="0" cellpadding="5">
+    <h3>Audit Log</h3>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Action</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Krylaic</td>
+            <td>Terminated user "username" for reason.</td>
+            <td>Sep 13, 2026</td>
+        </tr>
+        <tr>
+            <td>Krylaic</td>
+            <td>Logged in as username.</td>
+            <td>Sep 13, 2026</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}

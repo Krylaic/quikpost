@@ -37,6 +37,7 @@ $pageController = new \App\Controllers\PageController($twig);
 $authController = new \App\Controllers\AuthController($twig);
 $postController = new \App\Controllers\PostController($twig);
 $userController = new \App\Controllers\UserController($twig);
+$adminController = new \App\Controllers\AdminController($twig);
 
 // load services
 $helperService = new \App\Services\HelperService($twig);
@@ -221,6 +222,12 @@ $router->get('/contact', function() use ($pageController) {
 
 $router->post('/contact', function() use ($pageController) {
     $pageController->contact();
+});
+
+// admin
+
+$router->get('/admin', function() use ($adminController) {
+    $adminController->statistics();
 });
 
 
