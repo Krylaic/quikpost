@@ -81,13 +81,13 @@ $router->get('/', function() use ($pageController) {
     $pageController->index();
 });
 
-$router->get('/page/{page}', function($page) use ($pageController) {
+$router->get('/page/(\d+)', function($page) use ($pageController) {
     $pageController->index($page);
 });
 
 // explore
 
-$router->get('/explore/{page}', function($page) use ($pageController) {
+$router->get('/explore/(\d+)', function($page) use ($pageController) {
     $pageController->explore($page);
 });
 
@@ -109,7 +109,7 @@ $router->get('/news', function() use ($pageController) {
 
 // status 
 
-$router->get('/status/{status}/{page}', function ($status, $page) use ($postController) {
+$router->get('/status/{status}/(\d+)', function ($status, $page) use ($postController) {
     $postController->status($status, $page);
 });
 
@@ -119,7 +119,7 @@ $router->get('/status/{status}', function ($status) use ($postController) {
 
 // user
 
-$router->get('/user/{username}/{page}', function ($username, $page) use ($userController) {
+$router->get('/user/{username}/(\d+)', function ($username, $page) use ($userController) {
     $userController->user($username, $page);
 });
 
@@ -154,7 +154,7 @@ $router->get('/follow/{username}', function($username) use ($userController) {
 
 // following/followers pages
 
-$router->get('/followers/{username}/{page}', function ($username, $page) use ($userController) {
+$router->get('/followers/{username}/(\d+)', function ($username, $page) use ($userController) {
     $userController->followers($username, $page);
 });
 
@@ -162,7 +162,7 @@ $router->get('/followers/{username}', function($username) use ($userController) 
     $userController->followers($username, 1);
 });
 
-$router->get('/following/{username}/{page}', function ($username, $page) use ($userController) {
+$router->get('/following/{username}/(\d+)', function ($username, $page) use ($userController) {
     $userController->following($username, $page);
 });
 
@@ -226,8 +226,16 @@ $router->post('/contact', function() use ($pageController) {
 
 // admin
 
+$router->get('/admin/(\d+)', function($page) use ($adminController) {
+    $adminController->statistics($page);
+});
+
 $router->get('/admin', function() use ($adminController) {
-    $adminController->statistics();
+    $adminController->statistics(1);
+});
+
+$router->get('/admin/site', function() use ($adminController) {
+    $adminController->site(1);
 });
 
 

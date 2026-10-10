@@ -1,0 +1,48 @@
+{% extends '/core/admin/base.twig' %} {% block tool %}
+
+<form method="POST" action="/admin/site">
+  <div class="row-fluid">
+    
+    <fieldset class="span7">
+      <legend>Site Configuration</legend>
+      
+      <label>Site Name</label>
+      <input type="text" name="site_name" placeholder="Quikpost" value="{{site_name}}">
+
+      <label>Slogan</label>
+      <input type="text" name="slogan" placeholder="Share your Thoughts" value="{{slogan}}">
+
+      <label>Domain</label>
+      <input type="text" name="domain" placeholder="quikpost.org" value="{{domain}}">
+
+      <label>Limit IPs to one per account</label>
+      <label class="checkbox">
+        <input {%if ip_check == 1 %}checked{%endif%} type="checkbox" name="ip_check"> Enable
+      </label>
+    </fieldset>
+
+    <fieldset class="span5">
+      <legend>Site Documentation</legend>
+
+      <label>About the Site</label>
+      <textarea rows="2" name="about" placeholder="This information gets displayed on the landing page (the homepage for users not logged in)">{{about}}</textarea>
+
+      <label>Terms of Service</label>
+      <textarea rows="2" name="terms" placeholder="Terms of service...">{{tos}}</textarea>
+
+      <label>Privacy Policy</label>
+      <textarea rows="2" name="privacy" placeholder="Privacy Policy...">{{privacy_policy}}</textarea>
+
+      <label>Community Guidelines</label>
+      <textarea rows="2" name="guidelines" placeholder="You cannot do X, Y, or Z...">{{community_guidelines}}</textarea>
+    </fieldset>
+
+  </div>
+
+  <div style="margin-top: 10px;">
+    <button type="submit" class="btn btn-primary">Update Site</button>
+  </div>
+</form>
+
+
+{% endblock %}

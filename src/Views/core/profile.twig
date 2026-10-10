@@ -18,44 +18,48 @@
 
 <div class="dashboard-row clearfix" style="border-left: 1px solid #eee;padding:15px;">
   
-<form style="height:400px;" method="POST" action="/profile" enctype="multipart/form-data">
-  <fieldset class="pull-left" style="width:69%;padding-right:5px;height:100%;">
-    <legend>Profile Customization</legend>
+<form method="POST" action="/profile" enctype="multipart/form-data">
+  <div class="row-fluid">
+    
+    <fieldset class="span7">
+      <legend>Profile Customization</legend>
 
-    <label>Display Name</label>
-    <input type="text" placeholder="Write a display name..." value="{{profile.display_name}}" name="display_name">
+      <label>Display Name</label>
+      <input type="text" placeholder="Write a display name..." value="{{profile.display_name}}" name="display_name">
 
-    <label>Biography</label>
-    <textarea placeholder="Write something about yourself..." name="bio">{{profile.bio}}</textarea>
+      <label>Biography</label>
+      <textarea rows="3" placeholder="Write something about yourself..." name="bio">{{profile.bio}}</textarea>
 
-    <label>Location</label>
-    <input type="text" placeholder="United States" value="{{profile.location}}" name="location">
+      <label>Location</label>
+      <input type="text" placeholder="United States" value="{{profile.location}}" name="location">
 
-    <label style="margin-bottom:0;">Avatar</label>
-    <div class="input" style="margin-bottom:5px;">
+      <label style="margin-bottom:0;">Avatar</label>
+      <div class="input" style="margin-bottom:5px;">
         <input class="input-file" accept="image/*" name="avatar" type="file">
-    </div>
+      </div>
 
-    <label style="margin-bottom:0;">Banner</label>
-    <div class="input" style="margin-bottom:5px;">
+      <label style="margin-bottom:0;">Banner</label>
+      <div class="input" style="margin-bottom:5px;">
         <input class="input-file" accept="image/*" name="banner" type="file">
-    </div>
+      </div>
+    </fieldset>
 
-  </fieldset>
+    <fieldset class="span5">
+      <legend>Account</legend>
 
-  <fieldset class="pull-right" style="width:30%;height:100%;">
-    <legend>Account</legend>
+      <label>Email</label>
+      <input type="email" placeholder="email@example.com" value="{{profile.email}}" name="email">
+      <span class="help-block">Updating your email requires reverification!</span>
 
-    <label>Email</label>
-    <input type="email" placeholder="email@example.com" value="{{profile.email}}" name="email">
-    <span class="help-block">Updating your email requires reverification!</span>
+      <label>Last.FM username</label>
+      <input type="text" placeholder="My_LastFM_Name" value="{{profile.lastfm_username}}" name="lastfm_username">
+    </fieldset>
 
-    <label>Last.FM username</label>
-    <input type="text" placeholder="My_LastFM_Name" value="{{profile.lastfm_username}}" name="lastfm_username">
+  </div>
 
-  </fieldset>
-
-  <button type="submit" class="btn btn-primary">Update Profile</button>
+  <div style="margin-top: 10px;">
+    <button type="submit" class="btn btn-primary">Update Profile</button>
+  </div>
 </form>
   
 </div>
