@@ -1,0 +1,80 @@
+{% extends '/layouts/base.twig' %}
+
+{% block content %}
+<link href="/assets/css/custom.css" rel="stylesheet">
+
+{% block header %}
+
+{%endblock %}
+
+<div class="dashboard-row clearfix">
+  <div class="dashboard-main">
+    {%block dashboardmain %}
+
+
+    {% endblock %}
+
+  </div>
+
+  <div class="dashboard-sidebar">
+    {% if news %}
+    <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div class="mb-2">
+            <div style="font-size: 1.0rem; font-weight: 600;">{{ news.title }}</div>
+            <div style="font-size: 0.7rem; color: #6c757d;">by <strong>{{ news.author }}</strong> on {{ news.post_date|date("M j, Y") }}</div>
+        </div>
+        <p class="text-body" style="margin:0;">{{ news.content|length > 140 ? news.content|slice(0, 140) ~ '...' : news.content }}</p>
+        <span style="text-align:right;"><a href="/news">Read more news...</a></span>
+    </div>
+    {% endif %}
+
+    {% if users %}
+    <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div style="font-size: 1.0rem; font-weight: 600;">New Users</div>
+
+        {% if users is not empty %}
+        <div class="user-grid">
+              {% for user in users %}
+                <a href="/user/{{ user.username }}" class="user-avatar" data-toggle="tooltip" data-placement="top" title="{{ user.display_name ?? user.username }}">
+                  <img src="{{ user.avatar }}" width="35" height="35" alt="username" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+              {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.user-grid {
+    overflow: hidden;
+    margin-right: -6px;
+}
+
+.user-avatar {
+    display: block;
+    float: left;
+    width: 35px;
+    height: 35px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+
+.user-avatar img {
+    display: block;
+}
+
+.user-avatar:hover img {
+    border-color: #999;
+}
+</style>
+
+<script>
+    $(function () {
+        $('.user-avatar').tooltip();
+    });
+</script>
+  
+<br>
+{% endblock %}

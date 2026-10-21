@@ -1,0 +1,55 @@
+{% extends '/core/admin/base.twig' %} {% block tool %}
+<h3>General Statistics</h3>
+<div class="clearfix" id="usernameField">
+    <p><strong>All Users: </strong>{{all_users}}</p>
+    <p><strong>Unbanned Users: </strong>{{unbanned_users}}</p>
+    <p><strong>Terminated Users: </strong>{{banned_users}}</p>
+    <p><strong>Verified Users: </strong>{{verified_users}}</p>
+    <p><strong>Admins: </strong>{{admin_users}}</p>
+    <p><strong>Total Follows: </strong>{{follows}}</p>
+    <p><strong>Posts: </strong>{{posts}}</p>
+</div>
+<hr>
+<table class="table-striped table table-bordered" cellspacing="0" cellpadding="5">
+    <h3>Audit Log</h3>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Action</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    {% if audit %}
+    <tbody>
+        {% for log in audit%}
+        <tr>
+            <td>{{log.admin}}</td>
+            <td>{{log.action}}</td>
+            <td>{{log.date|date("M j, Y, g:i:sa")}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {%else%}
+    {# i dont know how to make htis look right this is good enough #}
+    <tbody>
+        Nothing in audit log yet!
+    </tbody>
+    {% endif%}
+    
+</table>
+{% if audit %}
+<ul class="pager" style="padding:0px 10px;">
+{% if page > 1 %}
+<li class="previous">
+    <a href="/admin/{{ page - 1 }}">&larr; Newer</a>
+</li>
+{% endif %}
+{% if audit|length == 15 %}
+<li class="next">
+    <a href="/admin/{{ page + 1 }}">Older &rarr; </a>
+</li>
+{% endif %}
+</ul>
+{% endif %}
+
+{% endblock %}

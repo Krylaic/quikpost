@@ -1,0 +1,79 @@
+{% extends '/core/feeds/base.twig' %}
+
+
+{% block dashboardmain %}
+
+{% set post_id = post.id %}
+
+
+
+<div class="posts">
+
+        {% include '/layouts/posts.twig' with { post: post } %}
+
+{% if current_user %}
+    <div class="post-box" style="border-top:1px #eee solid;">
+      <form method="POST" action="/post" enctype="multipart/form-data">
+        
+        <div>
+          <img src="{{ current_user.avatar }}" width="48" height="48" class="pull-left" style="border:1px solid #cccccc;border-radius:4px;">
+          <textarea name="content" class="pull-left" placeholder="Reply with something cool..." maxlength="255"></textarea>
+        </div>
+        <input type="hidden" name="reply_to" value="{{ post.id }}">
+        <div class="post-box-actions">
+          <div class="actions">
+            <label for="file-input" style="cursor: pointer;" class="pull-left">
+                <img src="/assets/ico/picture_add.png" alt="Add Picture">
+            </label>
+            <input type="file" id="file-input" style="display: none;" accept="image/*" name="attachment">
+        </div>
+        
+        <!-- i got gemini to make this for me pls dont judge i hate javacsirpt-->
+      <script>
+          const fileInput = document.getElementById('file-input');
+
+          fileInput.addEventListener('change', (event) => {
+              const file = event.target.files[0];
+              if (file) {
+                  alert(`File successfully selected, it will be attached in your post`);
+              }
+          });
+      </script>
+          <input type="submit" class="btn btn-primary" value="Post">
+        </div>
+      </form>
+    </div>
+
+    {% endif %}
+
+    {% if replies is not empty %}
+    {% for post in replies %}
+        {% include '/layouts/posts.twig' with { post: post } %}
+    {% endfor %}
+    <ul class="pager" style="padding:0px 10px;">
+      {% if page > 1 %}
+      <li class="previous">
+        <a href="/status/{{ post_id}}/{{ page - 1 }}">&larr; Newer</a>
+      </li>
+      {% endif %}
+      {% if replies|length == 15 %}
+      <li class="next">
+        <a href="/status/{{ post_id }}/{{ page + 1 }}">Older &rarr; </a>
+      </li>
+      {% endif %}
+    </ul>
+{% else %}
+    <div id="error" style="position: relative; width: 100%; min-height: 150px; margin-top: 20px; padding: 0 0 12px; text-align: center; font-size: 0;">
+        <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+        <div style="position: relative; display: inline-block; vertical-align: middle; text-align: left; max-width: 320px; width: 100%; font-size: 13px;">
+            <h1 style="font-size: 20px; font-weight: 500; margin-top: 0; margin-bottom: 0;">Uh oh!</h1>
+            <p style="position: relative; margin-top: 0; font-size: 13px; cursor: default; color: gray; font-weight: 400;">
+                There aren't any replies yet! Why not make one?
+            </p>
+        </div>
+    </div>
+{% endif %}
+
+</div>
+
+{% endblock %}

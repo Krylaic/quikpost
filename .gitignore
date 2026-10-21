@@ -1,0 +1,15 @@
+composer.phar
+/vendor/
+.env
+
+/public/dynamic/avatars/*
+/public/dynamic/banners/*
+/public/dynamic/attachments/*
+
+!/public/dynamic/avatars/default.jpg
+!/public/dynamic/banners/default.jpg
+!/public/dynamic/attachments/ATTACHMENTS_GO_HERE.txt
+
+# Commit your application's lock file https://getcomposer.org/doc/01-basic-usage.md#commit-your-composer-lock-file-to-version-control
+# You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
+# composer.lock

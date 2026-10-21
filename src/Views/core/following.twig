@@ -1,0 +1,190 @@
+{% extends '/layouts/base.twig' %}
+
+{% block content %}
+<link href="/assets/css/custom.css" rel="stylesheet">
+<div class="profile-header" style="background:url('{{ user.banner }}') no-repeat center center / cover;">
+  <div class="profile-header-inner" style="background:none;">
+    <img class="hidden-phone hidden-tablet" src="{{ user.avatar }}" height="77" width="77" style="box-shadow:0 1px 2px rgba(0,0,0,0.25);border-radius:6px;padding-top:1.5px;">
+    <div style="color:white;margin-left:0;">
+      <h1 style="margin-top:0;text-shadow:0 1px 2px rgba(0,0,0,.5);min-width:230px;font-size:54px;">
+          {{ user.display_name ?? user.username }}
+      </h1>
+      <h3 style="margin:0;padding:0;line-height:22px;text-shadow:0 1px 2px rgba(0,0,0,.5);font-size:20px;font-weight:300;">
+        <a href="/user/{{ user.username }}" class="username-link">@{{ user.username }}</a> • member since {{ user.join_date|date("F j, Y") }}
+      </h3>
+    </div>
+  </div>
+</div>
+<div style="border-top: 1px solid #ccc !important;color:#666 !important;padding:2px;background: linear-gradient(to bottom, #F2F2F2, #ffffff);min-height:24px;font-family: Georgia, 'Helvetica Neue', Helvetica, Arial, sans-serif;border:1px solid #eee;">
+  {% if user.location %}
+  <span style="line-height:24px;margin-left:5px;" class="pull-left"><i class="icon-globe"></i> {{user.location}}</span>
+  {% endif %}
+  <span style="line-height:24px;margin-right:5px;" class="pull-right">
+    {% if current_user and current_user.username != user.username %}
+      <a href="/follow/{{ user.username }}" class="btn btn-mini" style="margin-bottom: 3px;margin-right:6px;">{% if is_following is true %}Unfollow{% else%}Follow{% endif %}</a>
+    {% endif %}
+    <i class="icon-user"></i>{{ side_followers[0].total ?? 0 }} follower{% if side_followers[0].total ?? 0 != 1 %}s{% endif%}
+  </span>
+</div>
+<div class="dashboard-row clearfix">
+  <div class="dashboard-main">
+    
+    <div class="users" style="padding:15px;">
+        <ul class="nav nav-tabs">
+        <li>
+            <a href="/followers/{{ user.username }}">Followers</a>
+        </li>
+        <li class="active"><a href="/following/{{ user.username }}">Following</a></li>
+        </ul>
+      {% if following is not empty %}
+        <div class="big-user-grid">
+          {% for f_user in following %}
+            <div class="user-card">
+              <a href="/user/{{ f_user.username }}">
+                <img src="{{ f_user.avatar ?? '/dynamic/avatars/default.jpg' }}" height="77" width="77" alt="{{ f_user.username }}" style="border:1px solid #eee;box-shadow:0 1px 2px rgba(0,0,0,0.25);border-radius:6px;padding-top:1.5px;">
+              </a>
+              <p style="text-align:center; margin-top: 5px;">
+                <a href="/user/{{ f_user.username }}" style="color: inherit; text-decoration: none;">
+                  {{ f_user.display_name ?? f_user.username }}
+                </a>
+              </p>
+            </div>
+          {% endfor %}
+          
+        </div>
+            <ul class="pager" style="padding:0px 10px;">
+            {% if page > 1 %}
+            <li class="previous">
+                <a href="/following/{{ user.username }}/{{ page - 1 }}">&larr; Older</a>
+            </li>
+            {% endif %}
+                {% if following[0].total > (page * 15) %}
+            <li class="next">
+                <a href="/following/{{ user.username }}/{{ page + 1 }}">Newer &rarr; </a>
+            </li>
+            {% endif %}
+          </ul>
+      {% else %}
+        <p class="text-body" style="padding: 10px; margin: 0;">{{ user.username }} isn't following anybody yet!</p>
+      {% endif %}
+    </div>
+
+  </div>
+  <div class="dashboard-sidebar">
+    <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div class="mb-2">
+            <div style="font-size: 1.0rem; font-weight: 600;">About {{user.username}}</div>
+        </div>
+        <p class="text-body" style="margin:0;">{{ user.bio ?? 'This user hasn\'t written a biography yet.' }}</p>
+    </div>
+    <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div style="font-size: 1.0rem; font-weight: 600;">Following ({{ side_following[0].total ?? 0 }})</div>
+        {% if side_following is not empty %}
+        <div class="user-grid">
+              {% for f_user in side_following %}
+                <a href="/user/{{ f_user.username }}" class="user-avatar" data-toggle="tooltip" data-placement="top" title="{{ f_user.display_name ?? f_user.username }}">
+                  <img src="{{ f_user.avatar }}" width="35" height="35" alt="{{ f_user.username }}" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+              {% endfor %}
+        </div>
+        <span style="text-align:right;"><a href="/following/{{user.username}}">See all following...</a></span>
+        {% else %}
+        <p class="text-body" style="margin:0;">{{user.username}} isn't following anybody yet!</p>
+        {% endif %}
+    </div>
+    <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div style="font-size: 1.0rem; font-weight: 600;">Followers ({{ side_followers[0].total ?? 0 }})</div>
+        {% if side_followers is not empty %}
+        <div class="user-grid">
+              {% for f_user in side_followers %}
+                <a href="/user/{{ f_user.username }}" class="user-avatar" data-toggle="tooltip" data-placement="top" title="{{ f_user.display_name ?? f_user.username }}">
+                  <img src="{{ f_user.avatar }}" width="35" height="35" alt="{{ f_user.username }}" style="border:1px solid #cccccc; border-radius:4px;">
+                </a>
+              {% endfor %}
+        </div>
+        <span style="text-align:right;"><a href="/followers/{{user.username}}">See all followers...</a></span>
+        {% else %}
+        <p class="text-body" style="margin:0;">Nobody is following {{user.username}} yet!</p>
+        {% endif %}
+    </div>
+    {% if user.lastfm_username and last_song and last_song.recenttracks.track is defined and last_song.recenttracks.track|length > 0 %}
+      {% set track = last_song.recenttracks.track[0] %}
+      <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+          <div style="font-size: 1.0rem; font-weight: 600;">Last Listened To <img src="/assets/img/lastfm.png" width="16"></div>
+          <div style="margin-right: -6px;height: 38px;">
+              {% if track.image[1]['#text'] %}
+                  <img class="pull-left"src="{{ track.image[1]['#text'] }}" width="35" height="35"style="border:1px solid #cccccc; border-radius:4px;">
+              {% endif %}
+              <div class="pull-left" style="margin-left: 4px;">
+                  <strong><p class="text-body" style="margin:0;max-width: 160px;">{{ track.name }}</p></strong>
+                  <p class="text-body"style="color: #666;margin:0;margin-top: -4px;">by {{ track.artist['#text'] }}</p>
+              </div> 
+          </div>
+          <span style="text-align:right;"><a href="https://www.last.fm/user/{{user.lastfm_username}}">View more on Last.FM... </a></span>
+      </div>
+  {% endif %}
+  </div>
+</div>
+
+<style>
+.user-grid {
+    overflow: hidden;
+    margin-right: -6px;
+}
+.user-avatar {
+    display: block;
+    float: left;
+    width: 35px;
+    height: 35px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+.user-avatar img {
+    display: block;
+}
+.user-avatar:hover img {
+    border-color: #999;
+}
+
+.big-user-grid {
+    zoom: 1;
+    display: table;
+    clear: both;
+}
+
+.user-card {
+    float: left;
+    width: 90px;
+    text-align: center;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.user-card img,
+.user-card .avatar {
+    display: block;
+    margin: 0 auto;
+}
+
+.user-card p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.user-card p a {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+</style>
+
+<script>
+    $(function () {$('.user-avatar').tooltip();
+    });
+</script>
+<br>
+{% endblock %}
