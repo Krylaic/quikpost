@@ -242,8 +242,6 @@ $router->post('/admin/site', function() use ($adminController) {
     $adminController->updateSite();
 });
 
-
-
 // post
 
 $router->post('/post', function() use ($postController) {

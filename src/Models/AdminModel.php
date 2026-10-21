@@ -4,20 +4,19 @@ namespace App\Models;
 
 class AdminModel extends BaseModel {
 
-
     public function fetchAuditLog($limit, $offset) {
-	    $stmt = $this->db->prepare('
-	        SELECT audit.*, users.username AS admin 
-	        FROM audit 
-	        LEFT JOIN users ON audit.admin = users.id 
-	        ORDER BY audit.date DESC 
-	        LIMIT ? OFFSET ?
-	    ');
-	    $stmt->bind_param('ii', $limit, $offset);
-	    $stmt->execute();
-	    
-	    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-	}
+        $stmt = $this->db->prepare('
+            SELECT audit.*, users.username AS admin 
+            FROM audit 
+            LEFT JOIN users ON audit.admin = users.id 
+            ORDER BY audit.date DESC 
+            LIMIT ? OFFSET ?
+        ');
+        $stmt->bind_param('ii', $limit, $offset);
+        $stmt->execute();
+        
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
 
     public function updateSite($site_name, $slogan, $domain, $ip_check, $about, $tos, $privacy_policy, $community_guidelines) {
         $current_user = $_SESSION['user_id'];
@@ -42,5 +41,4 @@ class AdminModel extends BaseModel {
             return false;
         }
     }
-
 }

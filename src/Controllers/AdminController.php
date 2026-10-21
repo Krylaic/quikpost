@@ -126,7 +126,6 @@ class AdminController {
         $privacy_policy = trim($_POST['privacy_policy'] ?? '') ?: null;
         $community_guidelines = trim($_POST['community_guidelines'] ?? '') ?: null;
 
-        // i would check the other values but this is technically the only thing required for functionality
         if(empty($domain)) {
             $_SESSION['notification'] = ['error', 'Domain requires a value'];
             header('Location: /admin/site');
@@ -145,5 +144,4 @@ class AdminController {
             exit;
         }
     }
-
 }
