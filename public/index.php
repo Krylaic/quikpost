@@ -224,6 +224,12 @@ $router->post('/contact', function() use ($pageController) {
     $pageController->contact();
 });
 
+// about 
+
+$router->get('/about', function() use ($pageController) {
+    $pageController->about();
+});
+
 // admin
 
 $router->get('/admin/(\d+)', function($page) use ($adminController) {
@@ -234,12 +240,70 @@ $router->get('/admin', function() use ($adminController) {
     $adminController->statistics(1);
 });
 
+
 $router->get('/admin/site', function() use ($adminController) {
     $adminController->site(1);
 });
 
 $router->post('/admin/site', function() use ($adminController) {
     $adminController->updateSite();
+});
+
+
+$router->get('/admin/reports/(\d+)', function($page) use ($adminController) {
+    $adminController->reports($page);
+});
+
+$router->get('/admin/reports', function() use ($adminController) {
+    $adminController->reports(1);
+});
+
+$router->get('/admin/reports/dismiss/(\d+)', function($id) use ($adminController) {
+    $adminController->dismissReport($id);
+});
+
+
+$router->get('/admin/users/(\d+)', function($page) use ($adminController) {
+    $adminController->users($page, $_GET['query'] ?? '');
+});
+
+$router->get('/admin/users', function() use ($adminController) {
+    $adminController->users($_GET['page'] ?? 1, $_GET['query'] ?? '');
+});
+
+$router->get('/admin/users/search', function() use ($adminController) {
+    $adminController->users($_GET['page'] ?? 1, $_GET['query'] ?? '');
+});
+
+$router->get('/admin/users/edit/(\w+)', function($username) use ($adminController) {
+    $adminController->editUser($username);
+});
+
+$router->post('/admin/users/edit/(\w+)', function($username) use ($adminController) {
+    $adminController->updateUser($username);
+});
+
+$router->get('/admin/users/ip/(\w+)', function($username) use ($adminController) {
+    $adminController->userIpHistory($username);
+});
+
+
+$router->get('/admin/contact/(\d+)', function($page) use ($adminController) {
+    $adminController->contact($page);
+});
+
+$router->get('/admin/contact', function() use ($adminController) {
+    $adminController->contact(1);
+});
+
+$router->get('/admin/news', function() use ($adminController) {
+    $adminController->news();
+});
+$router->post('/admin/news', function() use ($adminController) {
+    $adminController->createNews();
+});
+$router->get('/admin/news/delete/(\d+)', function($id) use ($adminController) {
+    $adminController->deleteNews($id);
 });
 
 // post

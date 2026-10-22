@@ -322,6 +322,15 @@ class PostModel extends BaseModel {
             return ['success' => false, 'error' => 'You do not have permission to delete this post!'];
         }
 
+        if($admin_level > 0){
+            $stmt = $this->db->prepare("INSERT INTO audit (action, admin, date) VALUES (?, ?, ?)");
+            $action = "Deleted a post (" . $post['id'] .") written by user ID " . $post['author'] .".";
+            $date = date('Y-m-d H:i:s');
+
+            $stmt->bind_param('sss', $action, $_SESSION['user_id'], $date);
+            $stmt->execute();
+        }
+
         $stmt = $this->db->prepare('DELETE FROM posts WHERE id = ?');
         $stmt->bind_param('i', $id);
         $stmt->execute();

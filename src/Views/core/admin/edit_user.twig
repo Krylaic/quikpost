@@ -1,0 +1,80 @@
+{% extends '/core/admin/base.twig' %} 
+
+{% block tool %}
+<form method="POST" action="/admin/users/edit/{{ user.username }}" enctype="multipart/form-data">
+  <input type="hidden" value="{{ user.username }}" name="username">
+
+  <div class="row-fluid">
+    
+    <fieldset class="span7">
+      <legend>Profile Customization</legend>
+
+      <label>Display Name</label>
+      <input type="text" placeholder="Write a display name..." value="{{ user.display_name|default('') }}" name="display_name">
+
+      <label>Biography</label>
+      <textarea rows="3" placeholder="Write something about yourself..." name="bio">{{ user.bio|default('') }}</textarea>
+
+      <label>Location</label>
+      <input type="text" placeholder="United States" value="{{ user.location|default('') }}" name="location">
+
+      <label>Last.FM username</label>
+      <input type="text" placeholder="My_LastFM_Name" value="{{ user.lastfm_username|default('') }}" name="lastfm_username">
+
+      <label style="margin-bottom:0;">Avatar</label>
+      <div class="input" style="margin-bottom:5px;">
+        <input class="input-file" accept="image/*" name="avatar" type="file">
+      </div>
+
+      <label style="margin-bottom:0;">Banner</label>
+      <div class="input" style="margin-bottom:5px;">
+        <input class="input-file" accept="image/*" name="banner" type="file">
+      </div>
+
+      <label>Update Reason</label>
+      <textarea rows="2" placeholder="Reason for updating user..." name="mod_note">{{ user.mod_note|default('') }}</textarea>
+    </fieldset>
+
+    <fieldset class="span5">
+      <legend>Account</legend>
+
+      <label>Email</label>
+      {% if current_admin_level >= 2 %}
+        <input type="email" placeholder="email@example.com" value="{{ user.email }}" name="email">
+      {% else %}
+        <input type="text" value="Hidden" disabled>
+      {% endif %}
+
+      <label>Admin Level</label>
+      <select name="admin_level">
+        <option value="0" {% if user.admin_level == 0 %}selected{% endif %}>User</option>
+        <option value="1" {% if user.admin_level == 1 %}selected{% endif %}>Moderator</option>
+        <option value="2" {% if user.admin_level == 2 %}selected{% endif %}>Staff</option>
+        <option value="3" {% if user.admin_level == 3 %}selected{% endif %}>Administrator</option>
+      </select>
+
+      <label class="checkbox">
+        <input type="checkbox" name="verified" value="1" {% if user.verified == 1 %}checked{% endif %}> Verified
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="suspended" value="1" {% if user.suspended == 1 %}checked{% endif %}> Suspended
+      </label>
+
+      <h3 style="margin-top: 20px;">Statistics</h3>
+      <div class="clearfix">
+        <p><strong>Join Date: </strong>{{ user.join_date|date("M j, Y") }}</p>
+        <p><strong>Followers: </strong>{{ followers_count|default(0) }}</p>
+        <p><strong>Posts: </strong>{{ post_count|default(0) }}</p>
+        <p><a href="/admin/users/ip/{{ user.username }}">View IP History</a></p>
+        <p><a href="/user/{{ user.username }}">View Profile</a></p>
+      </div>
+    </fieldset>
+
+  </div>
+
+  <div style="margin-top: 10px;">
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+  </div>
+</form>
+{% endblock %}

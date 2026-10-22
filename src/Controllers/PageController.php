@@ -103,6 +103,14 @@ class PageController {
         ]);
     }
 
+    public function about() {
+        $optionsModel = new OptionsModel();
+        
+        echo $this->twig->render('core/about.twig', [
+            'about' => $optionsModel->getAbout()
+        ]);
+    }
+
     public function contactForm() {
         $optionsModel = new OptionsModel();
         

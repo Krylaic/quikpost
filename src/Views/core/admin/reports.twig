@@ -1,0 +1,50 @@
+{% extends '/core/admin/base.twig' %} {% block tool %}
+<table class="table-striped table table-bordered" cellspacing="0" cellpadding="5">
+    <h3>Reports</h3>
+    <thead>
+        <tr>
+            <th>Reporter</th>
+            <th>Report Content</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    {% if reports %}
+    <tbody>
+        {% for report in reports%}
+        <tr>
+            <td>{{report.user_id}}</td>
+            <td>{{report.content}}</td>
+            <td>{{report.report_date|date("M j, Y, g:i:sa")}}</td>
+            <td>
+            <a class="btn btn-mini" href="/status/{{report.post_id}}">View Post</a>
+            <a class="btn btn-mini btn-danger" href="/admin/reports/dismiss/{{report.id}}">Dismiss Report</a>
+            <a class="btn btn-mini btn-danger" href="/delete/{{report.id}}">Delete Post</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    {%else%}
+    {# i dont know how to make htis look right this is good enough #}
+    <tbody>
+        No reports yet!
+    </tbody>
+    {% endif%}
+    
+</table>
+{% if reports %}
+<ul class="pager" style="padding:0px 10px;">
+{% if page > 1 %}
+<li class="previous">
+    <a href="/admin/reports/{{ page - 1 }}">&larr; Newer</a>
+</li>
+{% endif %}
+{% if reports|length == 15 %}
+<li class="next">
+    <a href="/admin/reports/{{ page + 1 }}">Older &rarr; </a>
+</li>
+{% endif %}
+</ul>
+{% endif %}
+
+{% endblock %}

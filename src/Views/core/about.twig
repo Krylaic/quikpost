@@ -1,0 +1,13 @@
+{% extends '/layouts/base.twig' %}
+
+{% block content %}
+<div style="height: 300px; line-height: 300px;">
+    <img src="/assets/img/about.png" width="300" style="display: inline-block; vertical-align: middle;" alt="Quikpost wordmark here is made by omicrn!" />
+    <div style="display: inline-block; vertical-align: middle; width: 460px; line-height: normal;margin-left:30px;">
+        <h1>{{site_name}}</h1>
+        <p>{{about}}</p>
+        <a href="https://github.com/krylaic/quikpost">Check the source code out on GitHub!</a>
+    </div>
+</div>
+<hr>
+{% endblock %}

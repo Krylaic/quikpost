@@ -1,0 +1,79 @@
+{# i got gemini to port over the old users table from the old quikpost from bootstrap 1 to 2 #}
+{% extends '/core/admin/base.twig' %} {% block tool %}
+<h3>Users {%if query %}(Searching for "{{query}}"){%endif%}</h3>
+<div style="border: 1px solid #ddd; border-radius: 4px; background-color: #fff; overflow: hidden;">
+
+    <div style="background-color: #f9f9f9; border-bottom: 1px solid #ddd; height: 40px; padding: 0 8px; box-sizing: border-box;padding-bottom:42px !important;">
+        <form method="GET" action="/admin/users/search" class="form-search" style="float: right; margin: 6px 0 0 0;">
+            <input type="text" name="query" class="input-medium search-query" placeholder="Search for a user..." value="">
+            <button type="submit" class="btn">Search</button>
+        </form>
+    </div>
+    <table class="table table-striped table-bordered" style="margin-bottom: 0; width: 100%; border: none; border-radius: 0;">
+        <thead>
+            <tr>
+                <th style="border-top: none; border-left: none;">Username</th>
+                <th style="border-top: none;">Posts</th>
+                <th style="border-top: none;">Register Date</th>
+                <th style="border-top: none;">Status</th>
+                <th style="border-top: none; border-right: none;">Actions</th>
+            </tr>
+        </thead>
+        {% if users %}
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td style="border-left: none;">{{ user.username }}</td>
+                <td>{{ user.post_count|default(0) }}</td>
+                <td>{{ user.join_date|date("M j, Y") }}</td>
+                <td>
+                    {% if user.suspended %}
+                        Suspended
+                    {% elseif user.admin_level == 3 %}
+                        Admin
+                    {% elseif user.admin_level == 2 %}
+                        Staff
+                    {% elseif user.admin_level == 1 %}
+                        Moderator
+                    {% elseif user.verified %}
+                        Verified
+                    {% else %}
+                        Unverified
+                    {% endif %}
+                </td>
+                <td style="border-right: none;">
+                    <div style="display: inline-block; margin-right: 5px;">
+                        <a href="/admin/users/edit/{{ user.username }}" class="btn btn-small">Edit</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% endif %}
+    </table>
+</div>
+
+{% if users %}
+<ul class="pager" style="padding:0px 10px;">
+{% if page > 1 %}
+<li class="previous">
+    {% if query %}
+        <a href="/admin/users?query={{ query|url_encode }}&page={{ page - 1 }}">&larr; Newer</a>
+    {% else %}
+        <a href="/admin/users/{{ page - 1 }}">&larr; Newer</a>
+    {% endif %}
+</li>
+{% endif %}
+{% if users|length == 15 %}
+<li class="next">
+    {% if query %}
+        <a href="/admin/users?query={{ query|url_encode }}&page={{ page + 1 }}">Older &rarr; </a>
+    {% else %}
+        <a href="/admin/users/{{ page + 1 }}">Older &rarr; </a>
+    {% endif %}
+</li>
+{% endif %}
+</ul>
+{% endif %}
+
+{% endblock %}

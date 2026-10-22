@@ -1,0 +1,50 @@
+{% extends '/core/admin/base.twig' %} 
+
+{% block tool %}
+<h3>Add News</h3>
+
+<form method="POST" action="/admin/news">
+  <label>Title</label>
+  <input type="text" name="title" placeholder="Title..." required>
+
+  <label>Content</label>
+  <textarea name="content" rows="4" placeholder="Content..." required></textarea>
+
+  <div style="margin-top: 10px;">
+    <button type="submit" class="btn btn-primary">Publish News</button>
+  </div>
+</form>
+<h3>Manage News</h3>
+<table class="table table-striped table-bordered" cellspacing="0" cellpadding="5">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  {% if news %}
+  <tbody>
+    {% for item in news %}
+    <tr>
+      <td>
+        {{ item.title }}
+      </td>
+      <td>{{ item.author }}</td>
+      <td>{{ item.post_date|date("M j, Y, g:i:sa") }}</td>
+      {% if current_admin_level >= 2 %}
+      <td>
+        <a href="/admin/news/delete/{{ item.id }}" class="btn btn-mini btn-danger" onclick="return confirm('Are you sure you want to delete this news ?');">
+          Delete
+        </a>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+  {% else %}
+  <p>No news yet</p>
+  {% endif %}
+</table>
+{% endblock %}
