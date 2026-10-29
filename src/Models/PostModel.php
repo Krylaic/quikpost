@@ -134,6 +134,35 @@ class PostModel extends BaseModel {
         return true;
     }
 
+    public function isPostAuthorSuspended($id) {
+        $stmt = $this->db->prepare('SELECT * FROM posts WHERE id = ?'); 
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result->num_rows === 0) {
+            return true;
+        }
+        $row = $result->fetch_assoc();
+
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE id = ?');
+        $stmt->bind_param('i', $row['author']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if($result->num_rows === 0) {
+            return true;
+        }
+
+        $row = $result->fetch_assoc();
+
+        if($row['suspended'] == 1) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getPostsByUserId($user_id, $limit = 15, $offset = 0) {
         $current_user_id = (int)($_SESSION['user_id'] ?? 0);
         $stmt = $this->db->prepare('

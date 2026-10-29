@@ -91,6 +91,12 @@ class PostController {
             exit;
         }
 
+        if($postModel->isPostAuthorSuspended($id)){
+            $_SESSION['notification'] = ['error', 'The author of this post is suspended!'];
+            header('Location: /');
+            exit;
+        }
+
         echo $this->twig->render('core/status.twig', [
             'news' => $newsModel->getLatestNews(),
             'post' => $postModel->getPostById($id),

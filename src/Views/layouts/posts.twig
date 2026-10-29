@@ -2,7 +2,13 @@
 {% if post.reply_to %}
 <div style="margin-left:40px;margin-top:-8px;margin-bottom:2px;">
     <img class="pull-left" src="/assets/img/arrow_redo.png">
-    <span style="color:#444;margin-left:3px;margin-top:-2px;font-size:13px;">Replying to <i><a href="/status/{{ post.reply_to }}">"{{ post.reply_to_content }}"</a></i></span>
+    <span style="color:#444;margin-left:3px;margin-top:-2px;font-size:13px;">Replying to <i>
+    {%if post.reply_to_content %}
+    <a href="/status/{{ post.reply_to }}">"{{ post.reply_to_content }}"</a>
+    {%else%}
+    a deleted post.
+    {%endif%}
+    </i></span>
 </div>
 {% endif %}
 <div class="post-content">
