@@ -76,7 +76,7 @@ class HelperService extends BaseService {
     }
 
     // taken from original quikpost
-    // pretty sure i watched a youtube video on how to make this ?? i dont remember it was a long time ago lol
+    // pretty sure i watched a youtube video on how to make this ?? i dont remember it was a long time ago lol 
     function uploadImageFile($inputName, $destinationDir, $maxFileSize = 10000000, $allowedExts = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp'], $onError = null) {
         if (!is_array($allowedExts)) {
             $allowedExts = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp'];
@@ -94,14 +94,107 @@ class HelperService extends BaseService {
             if (in_array($fileExt, $allowedExts)) {
                 if ($fileError === 0) {
                     if ($fileSize < $maxFileSize) {
-                        $fileNameNew = uniqid('', true) . "." . $fileExt;
-                        $relativePath = rtrim($destinationDir, '/') . '/' . $fileNameNew;
-                        $fileFullDestination = $_SERVER['DOCUMENT_ROOT'] . $relativePath;
+                        $targetExt = ($fileExt === 'gif') ? 'gif' : 'jpg';
+                        $fileNameNew = uniqid('', true) . "." . $targetExt;
 
-                        if (move_uploaded_file($fileTmpName, $fileFullDestination)) {
-                            return $relativePath;
-                        } else {
-                            if (is_callable($onError)) $onError("Failed to move uploaded file.");
+                        $relativePath = '/' . trim($destinationDir, '/') . '/' . $fileNameNew;
+                        $fileFullDestination = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . $relativePath;
+
+                        if($fileExt == 'gif') {
+                            if (move_uploaded_file($fileTmpName, $fileFullDestination)) {
+                                return $relativePath;
+                            } else {
+                                if (is_callable($onError)) $onError("Failed to move uploaded file.");
+                            }
+                        }else {
+                            switch ($fileExt) {
+                                // taken from https://code-boxx.com/compress-images-php/
+                                case 'png':
+                                    // (A) IMAGE OBJECT
+                                    $img = imagecreatefrompng($fileTmpName);
+                                    if ($img !== false) {
+                                        if (!imageistruecolor($img)) {
+                                            imagepalettetotruecolor($img);
+                                        }
+                                        
+                                        // (B) COMPRESS IMAGE
+                                        // (B1) BY REDUCING QUALITY
+                                        if (imagejpeg($img, $fileFullDestination, 50)) {
+                                            imagedestroy($img);
+                                            return $relativePath;
+                                        }
+                                        
+                                        imagedestroy($img);
+                                        if (is_callable($onError)) $onError("Failed to compress image");
+                                    } else {
+                                        if (is_callable($onError)) $onError("Failed to compress image");
+                                    }
+                                    break;
+                                case 'jpeg':
+                                case 'jpg':
+                                    // (A) IMAGE OBJECT
+                                    $img = imagecreatefromjpeg($fileTmpName);
+                                    if ($img !== false) {
+                                        if (!imageistruecolor($img)) {
+                                            imagepalettetotruecolor($img);
+                                        }
+                                        
+                                        // (B) COMPRESS IMAGE
+                                        // (B1) BY REDUCING QUALITY
+                                        if (imagejpeg($img, $fileFullDestination, 50)) {
+                                            imagedestroy($img);
+                                            return $relativePath;
+                                        }
+                                        
+                                        imagedestroy($img);
+                                        if (is_callable($onError)) $onError("Failed to compress image");
+                                    } else {
+                                        if (is_callable($onError)) $onError("Failed to compress image");
+                                    }
+                                    break;
+                                case 'webp':
+                                    // (A) IMAGE OBJECT
+                                    $img = imagecreatefromwebp($fileTmpName);
+                                    if ($img !== false) {
+                                        if (!imageistruecolor($img)) {
+                                            imagepalettetotruecolor($img);
+                                        }
+                                        
+                                        // (B) COMPRESS IMAGE
+                                        // (B1) BY REDUCING QUALITY
+                                        if (imagejpeg($img, $fileFullDestination, 50)) {
+                                            imagedestroy($img);
+                                            return $relativePath;
+                                        }
+                                        
+                                        imagedestroy($img);
+                                        if (is_callable($onError)) $onError("Failed to compress image");
+                                    } else {
+                                        if (is_callable($onError)) $onError("Failed to compress image");
+                                    }
+                                    break;
+                                case 'bmp':
+                                    // (A) IMAGE OBJECT
+                                    $img = imagecreatefrombmp($fileTmpName);
+                                    if ($img !== false) {
+                                        if (!imageistruecolor($img)) {
+                                            imagepalettetotruecolor($img);
+                                        }
+                                        
+                                        // (B) COMPRESS IMAGE
+                                        // (B1) BY REDUCING QUALITY
+                                        if (imagejpeg($img, $fileFullDestination, 50)) {
+                                            imagedestroy($img);
+                                            return $relativePath;
+                                        }
+                                        
+                                        imagedestroy($img);
+                                        if (is_callable($onError)) $onError("Failed to compress image");
+                                    } else {
+                                        if (is_callable($onError)) $onError("Failed to compress image");
+                                    }
+                                    break;
+                            }
                         }
                     } else {
                         if (is_callable($onError)) $onError("File is too large.");
