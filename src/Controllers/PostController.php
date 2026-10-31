@@ -34,13 +34,13 @@ class PostController {
         // make sure the post isn't empty
         if(empty($content)) {
             $_SESSION['notification'] = ['error', 'Your post must contain something!'];
-            header('Location: /');
+            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/'));
             exit;
         }
 
         if(strlen($content) > 255) {
             $_SESSION['notification'] = ['error', 'Your post must be less than 255 characters!'];
-            header('Location: /');
+            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/'));
             exit;
         }
 
@@ -60,7 +60,7 @@ class PostController {
 
             if ($upload_error) {
                 $_SESSION['notification'] = ['error', $upload_error];
-                header('Location: /');
+                header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/'));
                 exit;
             }
         }
@@ -70,11 +70,11 @@ class PostController {
 
         if($posted['success']) {
             $_SESSION['notification'] = ['success', 'Successfully posted!'];
-            header('Location: /');
+            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/'));
             exit;
         } else {
             $_SESSION['notification'] = ['error', $posted['error'] ?? 'Something went wrong'];
-            header('Location: /');
+            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/'));
             exit;
         }
         
@@ -192,7 +192,7 @@ class PostController {
             exit;
         }
 
-        header('Location: /status/' . $id);
+        header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/status/' . $id));
         exit;
     }
 
@@ -214,7 +214,7 @@ class PostController {
         }
 
         $_SESSION['notification'] = ['success', 'Post successfully deleted'];
-        header('Location: /');
+        header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/'));
         exit;
     }
 
