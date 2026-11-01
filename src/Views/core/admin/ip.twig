@@ -7,6 +7,9 @@
     <thead>
         <tr>
             <th>IP Address</th>
+            <th>Location</th>
+            <th>ISP</th>
+            <th>VPN</th>
         </tr>
     </thead>
     {% if ips %}
@@ -14,6 +17,15 @@
         {% for ip in ips %}
         <tr>
             <td>{{ ip.address }}</td>
+            <td>{{ ip.location }}</td>
+            <td>{{ ip.isp }}</td>
+            <td>
+                {% if ip.is_vpn %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>

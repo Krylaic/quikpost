@@ -482,12 +482,46 @@ class AdminController {
             exit;
         }
 
+        $adminModel->insertIntoAudit('Viewed the IPs of user ID '. $target_user['id']);
+
+        $ips = $adminModel->fetchUserIps($target_user['id']);
+
+        foreach ($ips as &$ip_record) {
+            if (in_array($ip_record['address'], ['127.0.0.1', '::1'])) {
+                $ip_record['location'] = 'Localhost';
+                $ip_record['isp'] = 'Internal Network';
+                $ip_record['is_vpn'] = false;
+                continue;
+            }
+
+            $response = @file_get_contents("https://ipwho.is/{$ip_record['address']}");
+            $ip_data = json_decode($response, true);
+
+            if ($ip_data && isset($ip_data['success']) && $ip_data['success'] === true) {
+                $city = $ip_data['city'] ?? 'Unknown';
+                $country = $ip_data['country'] ?? 'Unknown';
+                $ip_record['location'] = $city . ', ' . $country;
+                $ip_record['isp'] = $ip_data['connection']['isp'] ?? 'Unknown';
+                
+                $is_vpn = !empty($ip_data['security']['vpn']);
+                $is_proxy = !empty($ip_data['security']['proxy']);
+                $is_hosting = !empty($ip_data['security']['hosting']);
+
+                $ip_record['is_vpn'] = ($is_vpn || $is_proxy || $is_hosting);
+            } else {
+                $ip_record['location'] = 'Unknown';
+                $ip_record['isp'] = 'Unknown';
+                $ip_record['is_vpn'] = false;
+            }
+        }
+        unset($ip_record);
+
         echo $this->twig->render('core/admin/ip.twig', [
             'tool_name' => 'users',
             'tool_title' => 'IPs for: ' . $target_user['username'],
             'tool_desc' => 'A list of IP addresses for this user',
             'user' => $target_user,
-            'ips' => $adminModel->fetchUserIps($target_user['id'])
+            'ips' => $ips
         ]);
     }
 

@@ -161,4 +161,15 @@ class AdminModel extends BaseModel {
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function insertIntoAudit($action) {
+        $stmt = $this->db->prepare("INSERT INTO audit (action, admin, date) VALUES (?, ?, ?)");
+        $date = date('Y-m-d H:i:s');
+
+        $stmt->bind_param('sss', $action, $_SESSION['user_id'], $date);
+        if ($stmt->execute()){
+            return true;
+        }
+        return false;
+    }
+
 }
