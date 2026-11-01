@@ -23,7 +23,7 @@
             {{ post.post_date|timeAgo }}
         </span>
     </div>
-    <p class="post-text">{{ post.content }}</p>
+    <p class="post-text">{{ post.content|linkify }}</p>
     {% if post.attachment %}
     <a target="_blank" href="{{post.attachment}}"><img class="post-img" src="{{ post.attachment }}"></a>
     {% endif %}

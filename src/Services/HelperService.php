@@ -210,4 +210,18 @@ class HelperService extends BaseService {
         return null;
     }
 
+
+    function linkify($text) {
+        $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+
+        // taken from ripple (shoutout kylarz)
+        $text = preg_replace('!(((f|ht)tp(s)?://)[-a-zA-Zа-яА-Я()0-9@:%_+,.~#?&;//=]+)!i', '<a href="$1" target="_blank" rel="nofollow">$1</a>', $text);
+
+        // this part is AI because regex is stupid
+        $mentionPattern = '/(^|\s)@([a-zA-Z0-9_]+)/';
+        $text = preg_replace($mentionPattern, '$1<a href="/user/$2">@$2</a>', $text);
+
+        return $text;
+    }
+
 }

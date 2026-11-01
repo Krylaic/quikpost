@@ -45,7 +45,9 @@ $helperService = new \App\Services\HelperService($twig);
 $twig->addGlobal('site_name', $optionsModel->getSiteName());
 $twig->addGlobal('slogan', $optionsModel->getSlogan());
 $twig->addGlobal('domain', $optionsModel->getDomain());
+
 $twig->addFilter(new TwigFilter('timeAgo', [$helperService, 'timeAgo']));
+$twig->addFilter(new TwigFilter('linkify', [$helperService, 'linkify'], ['is_safe' => ['html']]));
 
 // set notification 
 if (!empty($_SESSION['notification'])) {
