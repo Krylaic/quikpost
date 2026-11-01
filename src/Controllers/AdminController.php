@@ -411,8 +411,8 @@ class AdminController {
             $adminLevel,
             $verified,
             $suspended,
-            $modNote,
-            $username
+            $username,
+            $modNote
         );
 
         if ($updated) {

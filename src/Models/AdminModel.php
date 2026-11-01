@@ -110,7 +110,7 @@ class AdminModel extends BaseModel {
     }
 
 
-    public function updateUserFull($userId, $displayName, $bio, $location, $lastfm, $email, $avatar, $banner, $adminLevel, $verified, $suspended, $modNote = '', $username) {
+    public function updateUserFull($userId, $displayName, $bio, $location, $lastfm, $email, $avatar, $banner, $adminLevel, $verified, $suspended, $username, $modNote = '') {
         $stmt = $this->db->prepare('
             UPDATE users SET display_name = ?, bio = ?, location = ?, lastfm_username = ?, email = ?, avatar = ?, banner = ?, admin_level = ?, verified = ?, suspended = ?, username = ? WHERE id = ?');
         
