@@ -2,6 +2,8 @@
 namespace App\Controllers;
 
 use Twig\Environment;
+use Wikimedia\CSS\Parser\Parser;
+use Wikimedia\CSS\Sanitizer\StylesheetSanitizer;
 use App\Models\PostModel;
 use App\Models\UserModel;
 use App\Models\AuthModel;
@@ -246,7 +248,21 @@ class UserController {
             $banner = $new_banner;
         }
 
-        $result = $userModel->updateProfile($user_id, $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username, $username);
+        $css = trim($_POST['css']) ?? '';
+        $parser = Parser::newFromString($css);
+
+        $stylesheet = $parser->parseStylesheet();
+        $sanitizer = StylesheetSanitizer::newDefault();
+        $newStylesheet = $sanitizer->sanitize( $stylesheet );
+
+        $newCss = (string)$newStylesheet;
+
+        $newCss = preg_replace('/\{\s*/', " {\n  ", $newCss);
+        $newCss = preg_replace('/;\s*/', ";\n  ", $newCss);
+        $newCss = preg_replace('/\s*\}\s*/', "\n}\n\n", $newCss);
+        $newCss = trim($newCss);
+
+        $result = $userModel->updateProfile($user_id, $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username, $username, $newCss);
 
         if (!$result['success']) {
             $_SESSION['notification'] = ['error', $result['error'] ?? 'Something went wrong!'];

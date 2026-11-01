@@ -186,6 +186,12 @@
 
 </style>
 
+{% if user.css %}
+  <style>
+    {{ user.css|raw }}
+  </style>
+{% endif %}
+
 <script>
     $(function () {$('.user-avatar').tooltip();
     });

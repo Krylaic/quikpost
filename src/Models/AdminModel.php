@@ -110,12 +110,12 @@ class AdminModel extends BaseModel {
     }
 
 
-    public function updateUserFull($userId, $displayName, $bio, $location, $lastfm, $email, $avatar, $banner, $adminLevel, $verified, $suspended, $username, $modNote = '') {
+    public function updateUserFull($userId, $displayName, $bio, $location, $lastfm, $email, $avatar, $banner, $adminLevel, $verified, $suspended, $username, $css, $modNote = '') {
         $stmt = $this->db->prepare('
-            UPDATE users SET display_name = ?, bio = ?, location = ?, lastfm_username = ?, email = ?, avatar = ?, banner = ?, admin_level = ?, verified = ?, suspended = ?, username = ? WHERE id = ?');
+            UPDATE users SET display_name = ?, bio = ?, location = ?, lastfm_username = ?, email = ?, avatar = ?, banner = ?, admin_level = ?, verified = ?, suspended = ?, username = ?, css = ? WHERE id = ?');
         
         $stmt->bind_param(
-            'sssssssiiisi', 
+            'sssssssiiissi', 
             $displayName, 
             $bio, 
             $location, 
@@ -127,6 +127,7 @@ class AdminModel extends BaseModel {
             $verified, 
             $suspended, 
             $username,
+            $css,
             $userId
         );
 

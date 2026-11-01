@@ -2,6 +2,8 @@
 namespace App\Controllers;
 
 use Twig\Environment;
+use Wikimedia\CSS\Parser\Parser;
+use Wikimedia\CSS\Sanitizer\StylesheetSanitizer;
 use App\Models\PostModel;
 use App\Models\OptionsModel;
 use App\Models\UserModel;
@@ -399,6 +401,20 @@ class AdminController {
             $username = $new_username;
         }
 
+        $css = trim($_POST['css']) ?? '';
+        $parser = Parser::newFromString($css);
+
+        $stylesheet = $parser->parseStylesheet();
+        $sanitizer = StylesheetSanitizer::newDefault();
+        $newStylesheet = $sanitizer->sanitize( $stylesheet );
+
+        $newCss = (string)$newStylesheet;
+
+        $newCss = preg_replace('/\{\s*/', " {\n  ", $newCss);
+        $newCss = preg_replace('/;\s*/', ";\n  ", $newCss);
+        $newCss = preg_replace('/\s*\}\s*/', "\n}\n\n", $newCss);
+        $newCss = trim($newCss);
+
         $updated = $adminModel->updateUserFull(
             $target_user['id'],
             $displayName,
@@ -412,6 +428,7 @@ class AdminController {
             $verified,
             $suspended,
             $username,
+            $newCss,
             $modNote
         );
 
@@ -613,6 +630,41 @@ class AdminController {
         }
 
         header('Location: /admin/news');
+        exit;
+    }
+
+    public function pullUpdates() {
+        $userModel = new UserModel;
+        $adminModel = new AdminModel;
+
+        if(empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'Please log in'];
+            header('Location: /login');
+            exit;
+        }
+
+        $admin_level = $userModel->fetchAdminStatus($_SESSION['user_id']);
+
+        if($admin_level < 3) {
+            if($admin_level > 0) {
+                $_SESSION['notification'] = ['error', 'You do not have access to this tool'];
+                header('Location: /admin');
+                exit;
+            }
+            $_SESSION['notification'] = ['error', 'Unauthorized'];
+            header('Location: /');
+            exit;
+        }
+
+        $root = dirname(__DIR__, 2);
+
+        $command = "cd " . escapeshellarg($root) . " && git fetch 2>&1 && git pull 2>&1 && vendor/bin/phinx migrate 2>&1";
+        $output = shell_exec($command);
+
+        $adminModel->insertIntoAudit('Pulled latest changes from repository');
+
+        $_SESSION['notification'] = ['success', 'Updated: ' . $output ?? "No output"];
+        header('Location: /admin/site');
         exit;
     }
 

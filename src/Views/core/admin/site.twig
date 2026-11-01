@@ -44,4 +44,13 @@
   </div>
 </form>
 
+<legend>Updates</legend>
+<p>This will pull the latest version of Quikpost from the repo and perform migrations. This could be potentially dangerous!!</p>
+
+<form method="POST" action="/admin/site/update" onsubmit="return confirm('Are you sure you want to update Quikpost?');">
+  <button type="submit" class="btn btn-primary">
+    Update Site
+  </button>
+</form>
+
 {% endblock %}

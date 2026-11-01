@@ -17,7 +17,14 @@ This pretty much just clones the repository and runs composer install to get the
 In the directory you have quikpost in, you will see a file called ".env.example", rename it to JUST ".env", and configure it to work for your server.
 
 ## Step 3
-Now, navigate to phpmyadmin, create a new database, and import the "quikpost.sql" file into the database.
+Now, navigate to phpmyadmin, create a new database, and edit your .env to use that database.
+
+Then, run
+```bash
+composer migrate
+```
+
+^ This will set up the database.
 
 ## Step 4
 Edit your virtual host configuration to make sure that it is pointed towards /wherever/quikpost/public, and NOT /wherever/quikpost.

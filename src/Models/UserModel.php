@@ -213,7 +213,7 @@ class UserModel extends BaseModel {
         return false;
     }
     
-    public function updateProfile($user_id, $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username, $username) {
+    public function updateProfile($user_id, $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username, $username, $css) {
         // this function is like partially gpt srry
         $stmt = $this->db->prepare('SELECT email FROM users WHERE id = ? LIMIT 1');
         $stmt->bind_param('i', $user_id);
@@ -246,11 +246,11 @@ class UserModel extends BaseModel {
         }
 
         if ($email_changed) {
-            $stmt = $this->db->prepare('UPDATE users SET display_name = ?, bio = ?, location = ?, avatar = ?, banner = ?, email = ?, lastfm_username = ?, verified = 0, verify_token = ?, username = ? WHERE id = ? LIMIT 1');
-            $stmt->bind_param('sssssssssi', $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username, $verify_token, $username, $user_id);
+            $stmt = $this->db->prepare('UPDATE users SET display_name = ?, bio = ?, location = ?, avatar = ?, banner = ?, email = ?, lastfm_username = ?, verified = 0, verify_token = ?, username = ?, css = ? WHERE id = ? LIMIT 1');
+            $stmt->bind_param('ssssssssssi', $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username, $verify_token, $username, $css, $user_id);
         } else {
-            $stmt = $this->db->prepare('UPDATE users SET display_name = ?, bio = ?, location = ?, avatar = ?, banner = ?, lastfm_username = ?, username = ? WHERE id = ? LIMIT 1');
-            $stmt->bind_param('sssssssi', $display_name, $bio, $location, $avatar, $banner, $lastfm_username, $username, $user_id);
+            $stmt = $this->db->prepare('UPDATE users SET display_name = ?, bio = ?, location = ?, avatar = ?, banner = ?, lastfm_username = ?, username = ?, css = ? WHERE id = ? LIMIT 1');
+            $stmt->bind_param('ssssssssi', $display_name, $bio, $location, $avatar, $banner, $lastfm_username, $username, $css, $user_id);
         }
 
         if (!$stmt->execute()) {

@@ -308,6 +308,11 @@ $router->get('/admin/news/delete/(\d+)', function($id) use ($adminController) {
     $adminController->deleteNews($id);
 });
 
+
+$router->post('/admin/site/update', function() use ($adminController) {
+    $adminController->pullUpdates();
+});
+
 // post
 
 $router->post('/post', function() use ($postController) {

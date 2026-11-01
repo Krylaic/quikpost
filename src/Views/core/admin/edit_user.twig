@@ -64,7 +64,7 @@
         <input type="checkbox" name="suspended" value="1" {% if user.suspended == 1 %}checked{% endif %}> Suspended
       </label>
 
-      <h3 style="margin-top: 20px;">Statistics</h3>
+      <legend>Statistics</legend>
       <div class="clearfix">
         <p><strong>Join Date: </strong>{{ user.join_date|date("M j, Y") }}</p>
         <p><strong>Followers: </strong>{{ followers_count|default(0) }}</p>
@@ -74,6 +74,13 @@
       </div>
     </fieldset>
 
+  </div>
+
+  <div class="row-fluid">
+    <fieldset class="span12">
+      <legend>Custom CSS</legend>
+      <textarea name="css" rows="10" class="span12"  placeholder="This is the CSS currently set on this user's profile" style="font-family: monospace;font-size:13px;">{{ user.css }}</textarea>
+    </fieldset>
   </div>
 
   <div style="margin-top: 10px;">
