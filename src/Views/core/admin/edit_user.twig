@@ -38,6 +38,9 @@
     <fieldset class="span5">
       <legend>Account</legend>
 
+      <label>Username</label>
+      <input type="text" placeholder="Username" value="{{user.username}}" name="new_username">
+
       <label>Email</label>
       {% if current_admin_level >= 2 %}
         <input type="email" placeholder="email@example.com" value="{{ user.email }}" name="email">

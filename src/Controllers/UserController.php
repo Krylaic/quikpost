@@ -4,6 +4,7 @@ namespace App\Controllers;
 use Twig\Environment;
 use App\Models\PostModel;
 use App\Models\UserModel;
+use App\Models\AuthModel;
 
 class UserController {
     private $twig;
@@ -139,6 +140,7 @@ class UserController {
         }
 
         $userModel = new UserModel();
+        $authModel = new AuthModel();
         $optionsModel = new \App\Models\OptionsModel();
         $mailService = new \App\Services\MailService($this->twig);
         $helperService = new \App\Services\HelperService($this->twig);
@@ -158,19 +160,40 @@ class UserController {
         $email = trim($_POST['email'] ?? '');
         $lastfm_username = trim($_POST['lastfm_username'] ?? '') ?: null;
 
-        if (strlen($display_name) > 50) {
+        $username = trim($_POST['username'] ?? '') ?: null;
+        $current_username = $userModel->fetchUsername($_SESSION['user_id']);
+
+        if($username !== $current_username) {
+            if(empty($username) || strlen($username) < 3 || strlen($username) > 20) {
+                $_SESSION['notification'] = ['error', 'Your username must be greater than 3 and less than 20 characters!'];
+                header('Location: /profile');
+                exit;
+            } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
+                $_SESSION['notification'] = ['error', 'Your username can only contain letters, numbers, and underscores!'];
+                header('Location: /profile');  
+                exit;
+            } elseif($authModel->usernameExists($username)) {
+                $_SESSION['notification'] = ['error', 'That username is taken!'];
+                header('Location: /profile');
+                exit;
+            } 
+        }
+
+        
+
+        if (strlen($display_name ?? '') > 50) {
             $_SESSION['notification'] = ['error', 'Your display name must be less than 50 characters!'];
             header('Location: /profile');
             exit;
         }
 
-        if (strlen($bio) > 500) {
+        if (strlen($bio ?? '') > 500) {
             $_SESSION['notification'] = ['error', 'Your biography must be less than 500 characters!'];
             header('Location: /profile');
             exit;
         }
 
-        if (strlen($location) > 100) {
+        if (strlen($location ?? '') > 100) {
             $_SESSION['notification'] = ['error', 'Your location must be less than 100 characters!'];
             header('Location: /profile');
             exit;
@@ -182,7 +205,7 @@ class UserController {
             exit;
         }
 
-        if (strlen($lastfm_username) > 50) {
+        if (strlen($lastfm_username ?? '') > 50) {
             $_SESSION['notification'] = ['error', 'Your Last.FM username must be less than 50 characters!'];
             header('Location: /profile');
             exit;
@@ -223,7 +246,7 @@ class UserController {
             $banner = $new_banner;
         }
 
-        $result = $userModel->updateProfile($user_id, $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username);
+        $result = $userModel->updateProfile($user_id, $display_name, $bio, $location, $avatar, $banner, $email, $lastfm_username, $username);
 
         if (!$result['success']) {
             $_SESSION['notification'] = ['error', $result['error'] ?? 'Something went wrong!'];

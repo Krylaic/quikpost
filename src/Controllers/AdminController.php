@@ -280,6 +280,7 @@ class AdminController {
         // this function is like mostly ai, i apologize i got lazy
         $userModel = new UserModel;
         $adminModel = new AdminModel;
+        $authModel = new AuthModel;
         $helperService = new \App\Services\HelperService($this->twig);
 
         if (empty($_SESSION['user_id'])) {
@@ -316,6 +317,25 @@ class AdminController {
         $email = trim($_POST['email'] ?? '');
         $verified = isset($_POST['verified']) ? 1 : 0;
         $modNote = trim($_POST['mod_note'] ?? '');
+
+        $current_username = $username; 
+        $new_username = trim($_POST['new_username'] ?? '');
+
+        if ($new_username !== $current_username) {
+            if (empty($new_username) || strlen($new_username) < 3 || strlen($new_username) > 20) {
+                $_SESSION['notification'] = ['error', 'Your username must be greater than 3 and less than 20 characters!'];
+                header("Location: /admin/users/edit/{$current_username}");
+                exit;
+            } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $new_username)) {
+                $_SESSION['notification'] = ['error', 'Your username can only contain letters, numbers, and underscores!'];
+                header("Location: /admin/users/edit/{$current_username}");  
+                exit;
+            } elseif ($authModel->usernameExists($new_username)) {
+                $_SESSION['notification'] = ['error', 'That username is taken!'];
+                header("Location: /admin/users/edit/{$current_username}");
+                exit;
+            } 
+        }
 
         if (empty($email)) {
             $_SESSION['notification'] = ['error', 'Email address cannot be empty.'];
@@ -375,6 +395,10 @@ class AdminController {
             }
         }
 
+        if (!empty($new_username)) {
+            $username = $new_username;
+        }
+
         $updated = $adminModel->updateUserFull(
             $target_user['id'],
             $displayName,
@@ -387,7 +411,8 @@ class AdminController {
             $adminLevel,
             $verified,
             $suspended,
-            $modNote
+            $modNote,
+            $username
         );
 
         if ($updated) {
@@ -396,7 +421,12 @@ class AdminController {
             $_SESSION['notification'] = ['error', 'Failed to update user.'];
         }
 
-        header("Location: /admin/users/edit/{$username}");
+        if($new_username !== $current_username) {
+            header("Location: /admin/users/edit/{$new_username}");
+        } else {
+            header("Location: /admin/users/edit/{$username}");
+        }
+
         exit;
     }
 
