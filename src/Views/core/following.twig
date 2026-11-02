@@ -15,7 +15,7 @@
     </div>
   </div>
 </div>
-<div style="border-top: 1px solid #ccc !important;color:#666 !important;padding:2px;background: linear-gradient(to bottom, #F2F2F2, #ffffff);min-height:24px;font-family: Georgia, 'Helvetica Neue', Helvetica, Arial, sans-serif;border:1px solid #eee;">
+<div class="profile-info">
   {% if user.location %}
   <span style="line-height:24px;margin-left:5px;" class="pull-left"><i class="icon-globe"></i> {{user.location}}</span>
   {% endif %}
@@ -23,7 +23,7 @@
     {% if current_user and current_user.username != user.username %}
       <a href="/follow/{{ user.username }}" class="btn btn-mini" style="margin-bottom: 3px;margin-right:6px;">{% if is_following is true %}Unfollow{% else%}Follow{% endif %}</a>
     {% endif %}
-    <i class="icon-user"></i>{{ side_followers[0].total ?? 0 }} follower{% if side_followers[0].total ?? 0 != 1 %}s{% endif%}
+    <i class="icon-user"></i>{{ followers[0].total ?? 0 }} follower{% if followers[0].total ?? 0 != 1 %}s{% endif%}
   </span>
 </div>
 <div class="dashboard-row clearfix">

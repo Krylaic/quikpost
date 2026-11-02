@@ -480,3 +480,7 @@
   width:77px;
   height: 77px;
 }
+
+.profile-info {
+  border-top: 1px solid #ccc !important;color:#666 !important;padding:2px;background: linear-gradient(to bottom, #F2F2F2, #ffffff);min-height:24px;font-family: Georgia, 'Helvetica Neue', Helvetica, Arial, sans-serif;border:1px solid #eee;
+}
