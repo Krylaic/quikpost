@@ -41,6 +41,7 @@
                 <form class="navbar-form pull-right" method="POST" action="/login">
                     <input name="username" class="input-small" type="text" placeholder="Username">
                     <input name="password" class="input-small" type="password" placeholder="Password">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
                     <button type="submit" class="btn">Sign in</button>
                 </form>
                 {% endif %}

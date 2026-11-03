@@ -30,6 +30,22 @@ class AuthModel extends BaseModel {
         return $builder->compare($form_input);
     }
 
+
+    public function verifyCsrf() {
+        if (empty($_SESSION['csrf']) || empty($_POST['csrf'])) {
+            $_SESSION['notification'] = ['error', 'Invalid CSRF token'];
+            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/'));
+            exit;
+        }
+        
+        if($_SESSION['csrf'] == $_POST['csrf']) {
+            return true;
+        }
+        $_SESSION['notification'] = ['error', 'Invalid CSRF token'];
+        header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/'));
+        exit;
+    }
+
     public function usernameExists($username) {
         // check if the username has been taken on the site
         $stmt = $this->db->prepare('SELECT 1 FROM users WHERE username = ? LIMIT 1');

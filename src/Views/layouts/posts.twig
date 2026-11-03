@@ -27,12 +27,15 @@
     {% if post.attachment %}
     <a target="_blank" href="{{post.attachment}}"><img class="post-img" src="{{ post.attachment }}"></a>
     {% endif %}
-    <div class="post-actions">
+        <div class="post-actions">
         <div class="pull-left">
-        <a class="like {% if post.is_liked is true%}like-pressed{%endif%}" href="/like/{{ post.id }}">
-            <div class="like-icon"></div>
-            <div class="like-text">{{post.likes}}</div>
-        </a>
+        <form method="POST" action="/like/{{ post.id }}" style="display:inline;margin:0;">
+            <input type="hidden" name="csrf" value="{{ csrf }}">
+            <a class="like {% if post.is_liked is true%}like-pressed{%endif%}" href="#" onclick="this.parentNode.submit(); return false;">
+                <div class="like-icon"></div>
+                <div class="like-text">{{post.likes}}</div>
+            </a>
+        </form>
         <a class="reply" href="/status/{{ post.id }}">
             <div class="reply-icon"></div>
             <div class="reply-text">{{ post.reply_count }} {% if post.reply_count == 1 %}reply{% else %}replies{% endif %}</div>
@@ -45,16 +48,22 @@
             <div class="report-icon"></div>
         </a>
         {% if current_user.admin_level > 0 %}
-        <a class="delete" href="/delete/{{post.id }}">
-            <div class="delete-text">Delete</div>
-            <div class="delete-icon"></div>
-        </a>
+        <form method="POST" action="/delete/{{ post.id }}" style="display:inline;margin:0;">
+            <input type="hidden" name="csrf" value="{{ csrf }}">
+            <a class="delete" href="#" onclick="this.parentNode.submit(); return false;">
+                <div class="delete-text">Delete</div>
+                <div class="delete-icon"></div>
+            </a>
+        </form>
         {%endif%}
         {% else %}
-        <a class="delete" href="/delete/{{post.id }}">
-            <div class="delete-text">Delete</div>
-            <div class="delete-icon"></div>
-        </a>
+        <form method="POST" action="/delete/{{ post.id }}" style="display:inline;margin:0;">
+            <input type="hidden" name="csrf" value="{{ csrf }}">
+            <a class="delete" href="#" onclick="this.parentNode.submit(); return false;">
+                <div class="delete-text">Delete</div>
+                <div class="delete-icon"></div>
+            </a>
+        </form>
         {% endif %}
         </div>
     </div>

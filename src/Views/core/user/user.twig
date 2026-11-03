@@ -1,0 +1,36 @@
+{% extends '/core/user/base.twig' %}
+
+{% block dashboardmain %}
+    {% if current_user and current_user.username == user.username %}
+    {% include '/layouts/elements/post_box.twig' %}
+    {% endif %}
+    <div class="posts">
+    {% if posts is not empty %}
+        {% for post in posts %}
+            {% include '/layouts/posts.twig' with { post: post } %}
+        {% endfor %}
+        <ul class="pager" style="padding:0px 10px;">
+          {% if page > 1 %}
+          <li class="previous">
+            <a href="/user/{{user.username}}/{{ page - 1 }}">&larr; Newer</a>
+          </li>
+          {% endif %}
+          {% if posts|length == 15 %}
+          <li class="next">
+            <a href="/user/{{user.username}}/{{ page + 1 }}">Older &rarr; </a>
+          </li>
+          {% endif %}
+        </ul>
+    {% else %}
+        <div id="error" style="position: relative; width: 100%; min-height: 150px; margin-top: 20px; padding: 0 0 12px; text-align: center; font-size: 0;">
+            <span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+            <div style="position: relative; display: inline-block; vertical-align: middle; text-align: left; max-width: 320px; width: 100%; font-size: 13px;">
+                <h1 style="font-size: 20px; font-weight: 500; margin-top: 0; margin-bottom: 0;">Uh oh!</h1>
+                <p style="position: relative; margin-top: 0; font-size: 13px; cursor: default; color: gray; font-weight: 400;">
+                    This user hasn't made any posts yet!
+                </p>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}

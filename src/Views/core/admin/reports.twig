@@ -17,9 +17,15 @@
             <td>{{report.content}}</td>
             <td>{{report.report_date|date("M j, Y, g:i:sa")}}</td>
             <td>
-            <a class="btn btn-mini" href="/status/{{report.post_id}}">View Post</a>
-            <a class="btn btn-mini btn-danger" href="/admin/reports/dismiss/{{report.id}}">Dismiss Report</a>
-            <a class="btn btn-mini btn-danger" href="/delete/{{report.post_id}}">Delete Post</a>
+                <a class="btn btn-mini" href="/status/{{report.post_id}}">View Post</a>
+                <form method="POST" action="/admin/reports/dismiss/{{report.id}}" style="display:inline;margin:0;">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <button type="submit" class="btn btn-mini btn-danger">Dismiss Report</button>
+                </form>
+                <form method="POST" action="/delete/{{report.post_id}}" style="display:inline;margin:0;">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <button type="submit" class="btn btn-mini btn-danger">Delete Post</button>
+                </form>
             </td>
         </tr>
         {% endfor %}

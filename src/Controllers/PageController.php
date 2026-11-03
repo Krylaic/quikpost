@@ -145,6 +145,18 @@ class PageController {
             exit;
         }
 
+        if (strlen($content) > 10000) {
+            $_SESSION['notification'] = ['error', 'Your message must be less than 10000 characters!'];
+            header('Location: /contact');
+            exit;
+        }
+
+        if (strlen($email) > 255) {
+            $_SESSION['notification'] = ['error', 'Your email must be less than 255 characters!'];
+            header('Location: /contact');
+            exit;
+        }
+
         $contacted = $siteModel->contact($content, $email);
 
         if($contacted['success']) {

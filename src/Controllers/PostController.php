@@ -162,6 +162,12 @@ class PostController {
             exit;
         }
 
+        if (strlen($content) > 1000) {
+            $_SESSION['notification'] = ['error', 'Your report must be less than 1000 characters!'];
+            header('Location: /report/' . $id);
+            exit;
+        }
+
         $reported = $postModel->createReport($id, $content, $captcha);
 
         if($reported['success']) {

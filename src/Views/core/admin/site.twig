@@ -39,6 +39,7 @@
 
   </div>
 
+  <input type="hidden" name="csrf" value="{{ csrf }}">
   <div style="margin-top: 10px;">
     <button type="submit" class="btn btn-primary">Update Site</button>
   </div>
@@ -48,6 +49,7 @@
 <p>This will pull the latest version of Quikpost from the repo and perform migrations. This could be potentially dangerous!!</p>
 
 <form method="POST" action="/admin/site/update" onsubmit="return confirm('Are you sure you want to update Quikpost?');">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
   <button type="submit" class="btn btn-primary">
     Update Site
   </button>

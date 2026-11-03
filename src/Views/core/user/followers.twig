@@ -1,0 +1,42 @@
+{% extends '/core/user/base.twig' %}
+
+{% block dashboardmain %}
+    <div class="users" style="padding:15px;">
+        <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="/followers/{{ user.username }}">Followers</a>
+        </li>
+        <li><a href="/following/{{ user.username }}">Following</a></li>
+        </ul>
+      {% if followers is not empty %}
+        <div class="big-user-grid">
+          {% for f_user in followers %}
+            <div class="user-card">
+              <a href="/user/{{ f_user.username }}">
+                <img src="{{ f_user.avatar ?? '/dynamic/avatars/default.jpg' }}" height="77" width="77" alt="{{ f_user.username }}" style="border:1px solid #eee;box-shadow:0 1px 2px rgba(0,0,0,0.25);border-radius:6px;padding-top:1.5px;">
+              </a>
+              <p style="text-align:center; margin-top: 5px;">
+                <a href="/user/{{ f_user.username }}" style="color: inherit; text-decoration: none;">
+                  {{ f_user.display_name ?? f_user.username }}
+                </a>
+              </p>
+            </div>
+          {% endfor %}
+        </div>
+        <ul class="pager" style="padding:0px 10px;">
+        {% if page > 1 %}
+        <li class="previous">
+            <a href="/followers/{{ user.username }}/{{ page - 1 }}">&larr; Older</a>
+        </li>
+        {% endif %}
+        {% if followers[0].total > (page * 15) %}
+        <li class="next">
+            <a href="/followers/{{ user.username }}/{{ page + 1 }}">Newer &rarr; </a>
+        </li>
+        {% endif %}
+        </ul>
+      {% else %}
+        <p class="text-body" style="padding: 10px; margin: 0;">Nobody is following {{ user.username }} yet!</p>
+      {% endif %}
+    </div>
+{% endblock %}

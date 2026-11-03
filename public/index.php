@@ -1,11 +1,6 @@
 <?php
 session_start();
 
-//debug
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // external dependencies
@@ -26,11 +21,12 @@ $dotenv->load();
 $loader = new FilesystemLoader(__DIR__ . '/../src/Views');
 $twig = new Environment($loader, [
     "cache" => false,
-    "debug" => true
+    "debug" => false
 ]);
 
 // load models
 $optionsModel = new \App\Models\OptionsModel();
+$authModel = new \App\Models\AuthModel();
 
 // load controllers
 $pageController = new \App\Controllers\PageController($twig);
@@ -45,6 +41,11 @@ $helperService = new \App\Services\HelperService($twig);
 $twig->addGlobal('site_name', $optionsModel->getSiteName());
 $twig->addGlobal('slogan', $optionsModel->getSlogan());
 $twig->addGlobal('domain', $optionsModel->getDomain());
+
+if (empty($_SESSION['csrf']) ) {
+    $_SESSION['csrf'] = bin2hex(random_bytes(32));
+}
+$twig->addGlobal('csrf', $_SESSION['csrf']);
 
 $twig->addFilter(new TwigFilter('timeAgo', [$helperService, 'timeAgo']));
 $twig->addFilter(new TwigFilter('linkify', [$helperService, 'linkify'], ['is_safe' => ['html']]));
@@ -135,22 +136,26 @@ $router->get('/profile', function () use ($userController) {
     $userController->profile();
 });
 
-$router->post('/profile', function () use ($userController) {
+$router->post('/profile', function () use ($userController, $authModel) {
+    $authModel->verifyCsrf();
     $userController->updateProfile();
 });
 
 // post actions
 
-$router->get('/like/{id}', function($id) use ($postController) {
+$router->post('/like/{id}', function($id) use ($postController, $authModel) {
+    $authModel->verifyCsrf();
     $postController->like($id);
 });
 
-$router->get('/delete/{id}', function($id) use ($postController) {
+$router->post('/delete/{id}', function($id) use ($postController, $authModel) {
+    $authModel->verifyCsrf();
     $postController->delete($id);
 });
 
 // follow user 
-$router->get('/follow/{username}', function($username) use ($userController) {
+$router->post('/follow/{username}', function($username) use ($userController, $authModel) {
+    $authModel->verifyCsrf();
     $userController->followUser($username);
 });
 
@@ -178,7 +183,8 @@ $router->get('/report/{post}', function($post) use ($postController) {
     $postController->reportForm($post);
 });
 
-$router->post('/report/{post}', function($post) use ($postController) {
+$router->post('/report/{post}', function($post) use ($postController, $authModel) {
+    $authModel->verifyCsrf();
     $postController->report($post);
 });
 
@@ -188,7 +194,8 @@ $router->get('/register', function() use ($authController) {
     $authController->registerForm();
 });
 
-$router->post('/register', function() use ($authController) {
+$router->post('/register', function() use ($authController, $authModel) {
+    $authModel->verifyCsrf();
     $authController->register();
 });
 
@@ -198,7 +205,8 @@ $router->get('/login', function() use ($authController) {
     $authController->loginForm();
 });
 
-$router->post('/login', function() use ($authController) {
+$router->post('/login', function() use ($authController, $authModel) {
+    $authModel->verifyCsrf();
     $authController->login();
 });
 
@@ -222,7 +230,8 @@ $router->get('/contact', function() use ($pageController) {
     $pageController->contactForm();
 });
 
-$router->post('/contact', function() use ($pageController) {
+$router->post('/contact', function() use ($pageController, $authModel) {
+    $authModel->verifyCsrf();
     $pageController->contact();
 });
 
@@ -247,7 +256,8 @@ $router->get('/admin/site', function() use ($adminController) {
     $adminController->site(1);
 });
 
-$router->post('/admin/site', function() use ($adminController) {
+$router->post('/admin/site', function() use ($adminController, $authModel) {
+    $authModel->verifyCsrf();
     $adminController->updateSite();
 });
 
@@ -260,7 +270,8 @@ $router->get('/admin/reports', function() use ($adminController) {
     $adminController->reports(1);
 });
 
-$router->get('/admin/reports/dismiss/(\d+)', function($id) use ($adminController) {
+$router->post('/admin/reports/dismiss/(\d+)', function($id) use ($adminController, $authModel) {
+    $authModel->verifyCsrf();
     $adminController->dismissReport($id);
 });
 
@@ -281,7 +292,8 @@ $router->get('/admin/users/edit/(\w+)', function($username) use ($adminControlle
     $adminController->editUser($username);
 });
 
-$router->post('/admin/users/edit/(\w+)', function($username) use ($adminController) {
+$router->post('/admin/users/edit/(\w+)', function($username) use ($adminController, $authModel) {
+    $authModel->verifyCsrf();
     $adminController->updateUser($username);
 });
 
@@ -301,21 +313,25 @@ $router->get('/admin/contact', function() use ($adminController) {
 $router->get('/admin/news', function() use ($adminController) {
     $adminController->news();
 });
-$router->post('/admin/news', function() use ($adminController) {
+$router->post('/admin/news', function() use ($adminController, $authModel) {
+    $authModel->verifyCsrf();
     $adminController->createNews();
 });
-$router->get('/admin/news/delete/(\d+)', function($id) use ($adminController) {
+$router->post('/admin/news/delete/(\d+)', function($id) use ($adminController, $authModel) {
+    $authModel->verifyCsrf();
     $adminController->deleteNews($id);
 });
 
 
-$router->post('/admin/site/update', function() use ($adminController) {
+$router->post('/admin/site/update', function() use ($adminController, $authModel) {
+    $authModel->verifyCsrf();
     $adminController->pullUpdates();
 });
 
 // post
 
-$router->post('/post', function() use ($postController) {
+$router->post('/post', function() use ($postController, $authModel) {
+    $authModel->verifyCsrf();
     $postController->createPost();
 });
 

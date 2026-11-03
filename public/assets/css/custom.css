@@ -484,3 +484,37 @@
 .profile-info {
   height: auto;border-top: 1px solid #ccc !important;color:#666 !important;padding:2px;background: linear-gradient(to bottom, #F2F2F2, #ffffff);min-height:24px;font-family: Georgia, 'Helvetica Neue', Helvetica, Arial, sans-serif;border:1px solid #eee;
 }
+
+.big-user-grid {
+    zoom: 1;
+    display: table;
+    clear: both;
+}
+
+.user-card {
+    float: left;
+    width: 90px;
+    text-align: center;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.user-card img,
+.user-card .avatar {
+    display: block;
+    margin: 0 auto;
+}
+
+.user-card p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.user-card p a {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

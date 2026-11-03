@@ -29,11 +29,11 @@ class UserController {
 
         $user_id = $user['id'];
 
-        echo $this->twig->render('core/user.twig', [
+        echo $this->twig->render('core/user/user.twig', [
             'user' => $user,
             'posts' => $postModel->getPostsByUserId($user_id, 15, ($page - 1)*15),
-            'following' => $userModel->fetchFollowing($user_id, 10, 0),
-            'followers' => $userModel->fetchFollowers($user_id, 10, 0),
+            'side_following' => $userModel->fetchFollowing($user_id, 10, 0),
+            'side_followers' => $userModel->fetchFollowers($user_id, 10, 0),
             'is_following' => $userModel->isFollowing($_SESSION['user_id'] ?? null, $user_id),
             'last_song' => json_decode($userModel->getLastSong($username), true),
             'page' => $page
@@ -54,7 +54,7 @@ class UserController {
 
         $user_id = $user['id'];
 
-        echo $this->twig->render('core/followers.twig', [
+        echo $this->twig->render('core/user/followers.twig', [
             'user' => $user,
             'followers' => $userModel->fetchFollowers($user_id, 15, ($page - 1)*15),
             'side_following' => $userModel->fetchFollowing($user_id, 10, 0),
@@ -79,7 +79,7 @@ class UserController {
 
         $user_id = $user['id'];
 
-        echo $this->twig->render('core/following.twig', [
+        echo $this->twig->render('core/user/following.twig', [
             'user' => $user,
             'following' => $userModel->fetchFollowing($user_id, 15, ($page - 1)*15),
             'side_following' => $userModel->fetchFollowing($user_id, 10, 0),
@@ -183,8 +183,8 @@ class UserController {
 
         
 
-        if (strlen($display_name ?? '') > 50) {
-            $_SESSION['notification'] = ['error', 'Your display name must be less than 50 characters!'];
+        if (strlen($display_name ?? '') >= 20) {
+            $_SESSION['notification'] = ['error', 'Your display name must be less than 20 characters!'];
             header('Location: /profile');
             exit;
         }

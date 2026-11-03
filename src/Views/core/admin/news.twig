@@ -10,6 +10,7 @@
   <label>Content</label>
   <textarea name="content" rows="4" placeholder="Content..." required></textarea>
 
+  <input type="hidden" name="csrf" value="{{ csrf }}">
   <div style="margin-top: 10px;">
     <button type="submit" class="btn btn-primary">Publish News</button>
   </div>
@@ -35,9 +36,10 @@
       <td>{{ item.post_date|date("M j, Y, g:i:sa") }}</td>
       {% if current_admin_level >= 2 %}
       <td>
-        <a href="/admin/news/delete/{{ item.id }}" class="btn btn-mini btn-danger" onclick="return confirm('Are you sure you want to delete this news ?');">
-          Delete
-        </a>
+        <form method="POST" action="/admin/news/delete/{{ item.id }}" style="display:inline;margin:0;" onsubmit="return confirm('Are you sure you want to delete this news ?');">
+          <input type="hidden" name="csrf" value="{{ csrf }}">
+          <button type="submit" class="btn btn-mini btn-danger">Delete</button>
+        </form>
       </td>
       {% endif %}
     </tr>

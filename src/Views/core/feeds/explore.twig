@@ -17,35 +17,7 @@
 
 {% block dashboardmain %}
 {% if current_user %}
-    <div class="post-box">
-      <form method="POST" action="/post" enctype="multipart/form-data">
-        <div>
-          <img src="{{ current_user.avatar }}" width="48" height="48" class="pull-left" style="border:1px solid #cccccc;border-radius:4px;">
-          <textarea name="content" class="pull-left" placeholder="Write something cool..." maxlength="255"></textarea>
-        </div>
-        <div class="post-box-actions">
-          <div class="actions">
-            <label for="file-input" style="cursor: pointer;" class="pull-left">
-                <img src="/assets/ico/picture_add.png" alt="Add Picture">
-            </label>
-            <input type="file" id="file-input" style="display: none;" accept="image/*" name="attachment">
-        </div>
-
-        <!-- i got gemini to make this for me pls dont judge i hate javacsirpt-->
-      <script>
-          const fileInput = document.getElementById('file-input');
-
-          fileInput.addEventListener('change', (event) => {
-              const file = event.target.files[0];
-              if (file) {
-                  alert(`File successfully selected, it will be attached in your post`);
-              }
-          });
-      </script>
-          <input type="submit" class="btn btn-primary" value="Post">
-        </div>
-      </form>
-    </div>
+    {% include '/layouts/elements/post_box.twig' %}
     {% endif %}
 
 
