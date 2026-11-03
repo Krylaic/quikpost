@@ -455,9 +455,9 @@
     background-image: url(/assets/img/post-actions.png); 
     float: left;
     background-position: 0px -41px; 
-    image-rendering: -webkit-optimize-contrast; 
+    /*image-rendering: -webkit-optimize-contrast; 
     image-rendering: crisp-edges;
-    image-rendering: pixelated;
+    image-rendering: pixelated;*/
     margin-top:1px;
 }
 

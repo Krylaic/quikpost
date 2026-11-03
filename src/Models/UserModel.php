@@ -27,7 +27,7 @@ class UserModel extends BaseModel {
     }
 
     public function fetchRecentUsers($limit, $offset) {
-        $stmt = $this->db->prepare('SELECT * FROM users WHERE suspended = 0 ORDER BY join_date DESC LIMIT ? OFFSET ?');
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE suspended = 0 AND verified = 1 ORDER BY join_date DESC LIMIT ? OFFSET ?');
         $stmt->bind_param('ii', $limit, $offset);
         $stmt->execute();
         
