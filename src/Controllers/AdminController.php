@@ -668,4 +668,43 @@ class AdminController {
         exit;
     }
 
+    public function loginAs($username) {
+        $userModel = new UserModel;
+        $adminModel = new AdminModel;
+
+        if(empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'Please log in'];
+            header('Location: /login');
+            exit;
+        }
+
+        $admin_level = $userModel->fetchAdminStatus($_SESSION['user_id']);
+
+        if($admin_level < 3) {
+            if($admin_level > 0) {
+                $_SESSION['notification'] = ['error', 'You do not have access to this tool'];
+                header('Location: /admin');
+                exit;
+            }
+            $_SESSION['notification'] = ['error', 'Unauthorized'];
+            header('Location: /');
+            exit;
+        }
+
+        $user = $userModel->fetchAllUserDataByUsername($username);
+
+        if($user) {
+            $_SESSION['user_id'] = $user['id'];
+
+            $_SESSION['notification'] = ['success', 'Logged in as user'];
+            header('Location: /');
+            exit;
+        } else {
+            $_SESSION['notification'] = ['error', 'User does not exist'];
+            header('Location: /admin');
+            exit;
+        }
+
+    }
+
 }

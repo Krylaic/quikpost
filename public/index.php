@@ -313,10 +313,12 @@ $router->get('/admin/contact', function() use ($adminController) {
 $router->get('/admin/news', function() use ($adminController) {
     $adminController->news();
 });
+
 $router->post('/admin/news', function() use ($adminController, $authModel) {
     $authModel->verifyCsrf();
     $adminController->createNews();
 });
+
 $router->post('/admin/news/delete/(\d+)', function($id) use ($adminController, $authModel) {
     $authModel->verifyCsrf();
     $adminController->deleteNews($id);
@@ -326,6 +328,11 @@ $router->post('/admin/news/delete/(\d+)', function($id) use ($adminController, $
 $router->post('/admin/site/update', function() use ($adminController, $authModel) {
     $authModel->verifyCsrf();
     $adminController->pullUpdates();
+});
+
+
+$router->get('/admin/login/(\w+)', function($username) use ($adminController) {
+    $adminController->loginAs($username);
 });
 
 // post
