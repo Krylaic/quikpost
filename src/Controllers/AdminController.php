@@ -693,6 +693,8 @@ class AdminController {
 
         $user = $userModel->fetchAllUserDataByUsername($username);
 
+        $adminModel->insertIntoAudit("Logged in as user ID " . $user['id'] . " (" . $user['username'] . ")");
+
         if($user) {
             $_SESSION['user_id'] = $user['id'];
 
