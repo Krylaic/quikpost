@@ -511,20 +511,19 @@ class AdminController {
                 continue;
             }
 
-            $response = @file_get_contents("https://ipwho.is/{$ip_record['address']}");
+            $url = "http://ip-api.com/json/{$ip_record['address']}?fields=status,country,city,isp,proxy,hosting";
+            $response = @file_get_contents($url);
             $ip_data = json_decode($response, true);
 
-            if ($ip_data && isset($ip_data['success']) && $ip_data['success'] === true) {
+            if ($ip_data && isset($ip_data['status']) && $ip_data['status'] === 'success') {
                 $city = $ip_data['city'] ?? 'Unknown';
                 $country = $ip_data['country'] ?? 'Unknown';
                 $ip_record['location'] = $city . ', ' . $country;
-                $ip_record['isp'] = $ip_data['connection']['isp'] ?? 'Unknown';
+                $ip_record['isp'] = $ip_data['isp'] ?? 'Unknown';
                 
-                $is_vpn = !empty($ip_data['security']['vpn']);
-                $is_proxy = !empty($ip_data['security']['proxy']);
-                $is_hosting = !empty($ip_data['security']['hosting']);
-
-                $ip_record['is_vpn'] = ($is_vpn || $is_proxy || $is_hosting);
+                $is_proxy = !empty($ip_data['proxy']);
+                $is_hosting = !empty($ip_data['hosting']);
+                $ip_record['is_vpn'] = ($is_proxy || $is_hosting);
             } else {
                 $ip_record['location'] = 'Unknown';
                 $ip_record['isp'] = 'Unknown';
