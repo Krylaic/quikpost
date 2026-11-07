@@ -93,6 +93,28 @@
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
+<script>
+	// this SHOULD fix the mobile dropdown issue, this fix was written by ai tho, i dont know javascript.
+	$(document).ready(function() {
+    $(document).off('.dropdown.data-api');
+
+    $(document).on('click.mydropdown', '.dropdown-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $parent = $(this).parent();
+        
+        $('.dropdown').not($parent).removeClass('open');
+        
+        $parent.toggleClass('open');
+    });
+
+    $(document).on('click.mydropdown', function(e) {
+        if (!$(e.target).closest('.dropdown').length) {
+            $('.dropdown').removeClass('open');
+        }
+    });
+});
+</script>
 		<!-- /container -->
 		<!-- Le javascript
     ================================================== -->
