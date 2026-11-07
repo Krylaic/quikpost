@@ -709,4 +709,43 @@ class AdminController {
 
     }
 
+    public function altAccounts($username) {
+        $userModel = new UserModel;
+        $adminModel = new AdminModel;
+
+        if(empty($_SESSION['user_id'])) {
+            $_SESSION['notification'] = ['error', 'Please log in'];
+            header('Location: /login');
+            exit;
+        }
+
+        if($userModel->fetchAdminStatus($_SESSION['user_id']) <= 0) {
+            $_SESSION['notification'] = ['error', 'Unauthorized'];
+            header('Location: /');
+            exit;
+        }
+
+        $user = $userModel->fetchAllUserDataByUsername($username);
+
+        if (!$user) {
+            $_SESSION['notification'] = ['error', 'User not found'];
+            header('Location: /admin/users');
+            exit;
+        }
+
+        $alts = $adminModel->findAltAccounts($user['id']);
+
+        $adminModel->insertIntoAudit(
+            'Viewed possible alt accounts for user ID ' . $user['id']
+        );
+
+        echo $this->twig->render('core/admin/alts.twig', [
+            'tool_name' => 'users',
+            'tool_title' => 'Track Alts: ' . $user['username'],
+            'tool_desc' => 'Accounts seen with the same IP',
+            'user' => $user,
+            'alts' => $alts
+        ]);
+    }
+
 }

@@ -1,0 +1,39 @@
+{% extends '/core/admin/base.twig' %}
+
+{% block tool %}
+<h3>Alts</h3>
+
+{% if alts %}
+<table class="table table-striped table-bordered"
+       cellspacing="0" cellpadding="5">
+
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th># of Shared IPs</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for alt in alts %}
+        <tr>
+            <td>{{ alt.username }}</td>
+            <td>{{ alt.shared_ips }}</td>
+            <td>
+                <a class="btn btn-mini" href="/user/{{ alt.username }}">View Profile</a>
+                <a class="btn btn-mini" href="/admin/users/edit/{{ alt.username }}">Edit User</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+{% else %}
+
+<p>No accounts sharing IP addresses were found.</p>
+
+{% endif %}
+
+{% endblock %}

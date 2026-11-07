@@ -70,6 +70,7 @@
         <p><strong>Followers: </strong>{{ followers_count|default(0) }}</p>
         <p><strong>Posts: </strong>{{ post_count|default(0) }}</p>
         <p><a href="/admin/users/ip/{{ user.username }}">View IP History</a></p>
+        <p><a href="/admin/users/alts/{{ user.username }}">Track Alts</a></p>
         <p><a href="/user/{{ user.username }}">View Profile</a></p>
       </div>
     </fieldset>
@@ -92,6 +93,7 @@
 <div class="row-fluid">
     <fieldset class="span12">
       <legend>Login as User</legend>
+      <p>Please only do this if you have good reason, this action is logged in the audit log</p>
       <a href="/admin/login/{{user.username}}" class="btn btn-primary">Login as {{user.username }}</a>
     </fieldset>
   </div>

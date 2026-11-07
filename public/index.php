@@ -335,6 +335,11 @@ $router->get('/admin/login/(\w+)', function($username) use ($adminController) {
     $adminController->loginAs($username);
 });
 
+
+$router->get('/admin/users/alts/(\w+)', function($username) use ($adminController) {
+    $adminController->altAccounts($username);
+});
+
 // post
 
 $router->post('/post', function() use ($postController, $authModel) {

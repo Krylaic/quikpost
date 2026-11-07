@@ -87,6 +87,16 @@
           <span style="text-align:right;"><a href="https://www.last.fm/user/{{user.lastfm_username}}">View more on Last.FM... </a></span>
       </div>
     {% endif %}
+
+    {% if current_user.admin_level > 0 %}
+      <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
+        <div class="mb-2">
+            <div style="font-size: 1.0rem; font-weight: 600;">Admin Options</div>
+        </div>
+        <a href="/admin/users/edit/{{user.username}}" class="btn btn-small">Edit User</a>
+        <a href="/admin/users/ip/{{user.username}}" class="btn btn-small">View IPs</a>
+    </div>
+    {% endif %}
   </div>
 </div>
 

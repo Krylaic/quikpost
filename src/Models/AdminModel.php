@@ -173,4 +173,31 @@ class AdminModel extends BaseModel {
         return false;
     }
 
+
+    public function findAltAccounts($user_id) {
+        // i got ai to make the query for this
+        $stmt = $this->db->prepare('
+            SELECT
+                u.id,
+                u.username,
+                u.display_name,
+                u.avatar,
+                COUNT(DISTINCT target_ips.address) AS shared_ips
+            FROM ip_addresses target_ips
+            INNER JOIN ip_addresses matching_ips
+                ON target_ips.address = matching_ips.address
+            INNER JOIN users u
+                ON matching_ips.user_id = u.id
+            WHERE target_ips.user_id = ?
+                AND matching_ips.user_id != ?
+            GROUP BY u.id, u.username, u.display_name, u.avatar
+            ORDER BY shared_ips DESC, u.username ASC
+        ');
+
+        $stmt->bind_param('ii', $user_id, $user_id);
+        $stmt->execute();
+
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
 }
