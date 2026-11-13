@@ -39,7 +39,7 @@
         <div class="mb-2">
             <div style="font-size: 1.0rem; font-weight: 600;">About {{user.username}}</div>
         </div>
-        <p class="text-body" style="margin:0;">{{ user.bio ?? 'This user hasn\'t written a biography yet.' }}</p>
+        <p class="text-body" style="margin:0;">{{ user.bio ? user.bio|nl2br : 'This user hasn\'t written a biography yet.' }}</p>
     </div>
     <div style="word-wrap: break-word; overflow-wrap: break-word; line-height: 1.5; border-bottom: 1px solid #eee; padding: 10px 15px;">
         <div style="font-size: 1.0rem; font-weight: 600;">Following ({{ side_following[0].total ?? 0 }})</div>
