@@ -1,0 +1,35 @@
+{% extends '/layouts/base.twig' %}
+
+{% block content %}
+<form action="/themes/create" method="POST" enctype="multipart/form-data" class="form-stacked">
+    <fieldset>
+        <h2>Publish a Theme</h2>
+
+        <div class="clearfix">
+            <label for="title">Title</label>
+            <div class="input">
+                <input placeholder="My Theme" class="xlarge" id="title" name="title" size="30" type="text" maxlength="100" required>
+            </div>
+        </div>
+        <div class="clearfix">
+            <label for="description">Description</label>
+            <div class="input">
+                <textarea placeholder="Describe your theme..." class="xlarge" id="description" name="description" rows="3" maxlength="1000"></textarea>
+            </div>
+        </div>
+        <div class="clearfix">
+            <label for="image">Preview Image</label>
+            <div class="input">
+                <input class="input-file" id="image" name="image" type="file" accept="image/*">
+            </div>
+        </div>
+        <div class="clearfix">
+            <label for="css">CSS</label>
+                <textarea name="css" rows="10" class="span8" placeholder="Customize your profile!" style="font-family: monospace;font-size:13px;"></textarea>
+        </div>
+    </fieldset>
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<hr>
+{% endblock %}

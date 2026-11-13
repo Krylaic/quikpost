@@ -34,6 +34,7 @@ $authController = new \App\Controllers\AuthController($twig);
 $postController = new \App\Controllers\PostController($twig);
 $userController = new \App\Controllers\UserController($twig);
 $adminController = new \App\Controllers\AdminController($twig);
+$themeController = new \App\Controllers\ThemeController($twig);
 
 // load services
 $helperService = new \App\Services\HelperService($twig);
@@ -65,6 +66,14 @@ if (!empty($_SESSION['user_id'])) {
 
         $current_user = $userModel->fetchAllUserData($_SESSION['user_id']);
         $twig->addGlobal('current_user', $current_user);
+
+        if (!empty($current_user['active_theme'])) {
+            $themeModel = new \App\Models\ThemeModel();
+            $active_theme = $themeModel->getTheme($current_user['active_theme']);
+            if ($active_theme) {
+                $twig->addGlobal('active_theme', $active_theme);
+            }
+        }
     } else {
         unset($_SESSION['user_id']);
         $_SESSION['notification'] = ['error', 'Your account has been suspended.'];
@@ -363,6 +372,53 @@ $router->get('/logout', function() use ($authController) {
 
 $router->get('/verify/{verify_token}', function($verify_token) use ($authController) {
     $authController->verify($verify_token);
+});
+
+
+// themes
+$router->get('/themes', function() use ($themeController) {
+    $themeController->themes(1);
+});
+
+$router->get('/themes/page/(\d+)', function($page) use ($themeController) {
+    $themeController->themes($page);
+});
+
+$router->get('/themes/create', function() use ($themeController) {
+    $themeController->createForm();
+});
+
+$router->post('/themes/create', function() use ($themeController, $authModel) {
+    $authModel->verifyCsrf();
+    $themeController->create();
+});
+
+$router->get('/themes/(\d+)', function($id) use ($themeController) {
+    $themeController->view($id);
+});
+
+$router->get('/themes/edit/(\d+)', function($id) use ($themeController) {
+    $themeController->editForm($id);
+});
+
+$router->post('/themes/edit/(\d+)', function($id) use ($themeController, $authModel) {
+    $authModel->verifyCsrf();
+    $themeController->edit($id);
+});
+
+$router->post('/themes/delete/(\d+)', function($id) use ($themeController, $authModel) {
+    $authModel->verifyCsrf();
+    $themeController->delete($id);
+});
+
+$router->post('/themes/apply/(\d+)', function($id) use ($themeController, $authModel) {
+    $authModel->verifyCsrf();
+    $themeController->apply($id);
+});
+
+$router->post('/themes/remove', function() use ($themeController, $authModel) {
+    $authModel->verifyCsrf();
+    $themeController->remove();
 });
 
 $router->set404(function() use ($twig) {

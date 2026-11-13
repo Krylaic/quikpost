@@ -1,0 +1,41 @@
+{% extends '/layouts/base.twig' %}
+
+{% block content %}
+<form action="/themes/edit/{{ theme.id }}" method="POST" enctype="multipart/form-data" class="form-stacked">
+    <fieldset>
+        <h2>Edit Theme</h2>
+
+        <div class="clearfix">
+            <label for="title">Title</label>
+            <div class="input">
+                <input placeholder="My Theme" class="xlarge" id="title" name="title" size="30" type="text" maxlength="100" value="{{ theme.title }}" required>
+            </div>
+        </div>
+
+        <div class="clearfix">
+            <label for="description">Description</label>
+            <div class="input">
+                <textarea placeholder="Describe your theme..." class="xlarge" id="description" name="description" rows="3" maxlength="1000">{{ theme.description }}</textarea>
+            </div>
+        </div>
+
+        <div class="clearfix">
+            <label for="image">Preview Image</label>
+            <div class="input">
+                <input class="input-file" id="image" name="image" type="file" accept="image/*">
+            </div>
+        </div>
+
+        <div class="clearfix">
+            <label for="css">CSS</label>
+            <div class="input">
+                <textarea placeholder="/* Write your CSS here... */" class="span8" id="css" name="css" rows="12" style="font-family: monospace; font-size: 13px;" required>{{ theme.css }}</textarea>
+            </div>
+        </div>
+    </fieldset>
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="/themes/{{ theme.id }}" class="btn">Cancel</a>
+</form>
+<hr>
+{% endblock %}
