@@ -45,16 +45,15 @@ class ThemeModel extends BaseModel {
     }
 
     public function getTheme($id) {
-        $stmt = $this->db->prepare('SELECT * FROM themes WHERE id = ? LIMIT 1');
+        $stmt = $this->db->prepare('SELECT themes.*, users.username FROM themes LEFT JOIN users ON themes.author = users.id WHERE themes.id = ? LIMIT 1');
         $stmt->bind_param('i', $id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->fetch_assoc();
-
     }
-
+    
     public function getThemes($limit = 15, $offset = 0) {
-        $stmt = $this->db->prepare("SELECT * FROM themes ORDER BY creation_date DESC LIMIT ? OFFSET ?");
+        $stmt = $this->db->prepare("SELECT themes.*, users.username FROM themes LEFT JOIN users ON themes.author = users.id ORDER BY themes.creation_date DESC LIMIT ? OFFSET ?");
         $stmt->bind_param('ii', $limit, $offset);
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
