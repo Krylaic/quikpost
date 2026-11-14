@@ -120,10 +120,12 @@
     ================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
 
+		{% if user.css == null %}
 		{% if active_theme %}
 		<style>
 			{{ active_theme.css|raw }}
 		</style>
 		{% endif %}
+		{%endif %}
 	</body>
 </html>
